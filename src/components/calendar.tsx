@@ -247,7 +247,7 @@ export default function Calendar() {
                         hour12: true
                     }}
                     eventBorderColor={"black"}
-                    contentHeight={"auto"}
+                    contentHeight="auto"
                     expandRows={true}
                     dayCellContent={(dayInfo) => <DayRender info={dayInfo} />}
                     eventContent={(eventInfo) => <EventItem info={eventInfo} />}
