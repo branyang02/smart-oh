@@ -1,0 +1,22 @@
+{
+  "arrowParens": "always",
+  "singleQuote": false,
+  "tabWidth": 4,
+  "trailingComma": "none",
+  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "overrides": [
+    {
+      "files": ["*.json", ".prettierrc", "*.config.{js,ts,json}", "*.yaml"],
+      "options": {
+        "tabWidth": 2,
+        "useTabs": false,
+        "semi": true,
+        "singleQuote": false,
+        "arrowParens": "avoid"
+      }
+    }
+  ]
+}
