@@ -13,17 +13,21 @@ import Link from "next/link";
 
 export function NavProjects() {
     const { activeClass } = useClass();
+    if (!activeClass) return null;
+
     return (
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Some title</SidebarGroupLabel>
+        <SidebarGroup>
+            <SidebarGroupLabel>Others</SidebarGroupLabel>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                        <Link href={`/class/${activeClass.classId}/calendar`}>
-                            <Calendar />
-                            <span>Calendar</span>
-                        </Link>
-                    </SidebarMenuButton>
+                    <Link href={`/class/${activeClass.classId}/calendar`}>
+                        <SidebarMenuButton asChild tooltip="Home">
+                            <span className="flex items-center gap-2">
+                                <Calendar />
+                                <span>Calendar</span>
+                            </span>
+                        </SidebarMenuButton>
+                    </Link>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroup>

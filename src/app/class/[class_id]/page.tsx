@@ -5,6 +5,7 @@ import { useClass } from "@/context/class-context";
 
 export default function ClassPage() {
     const { activeClass } = useClass();
+    if (!activeClass) return null;
 
     return (
         <>

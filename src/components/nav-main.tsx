@@ -9,8 +9,16 @@ import {
 } from "@/components/ui/sidebar";
 import { useClass } from "@/context/class-context";
 
-export function NavMain({ activeUserIds = [] }: { activeUserIds: string[] }) {
-    const { courseStaff } = useClass();
+export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
+    const { courseStaff, activeClass } = useClass();
+    if (!activeClass)
+        return (
+            <SidebarGroup>
+                <SidebarGroupLabel>
+                    Join/Create a course to continue!
+                </SidebarGroupLabel>
+            </SidebarGroup>
+        );
 
     const tas = courseStaff.filter((staff) => staff.role === "TA");
     const instructors = courseStaff.filter(

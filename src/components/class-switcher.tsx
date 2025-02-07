@@ -1,5 +1,15 @@
 "use client";
 
+import { ClassForms } from "@/app/class/class-form";
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -39,8 +49,28 @@ function RoleIcon({ role }: { role: string | undefined }) {
 
 export function ClassSwitcher() {
     const { activeClass, userClasses } = useClass();
-
     const { isMobile } = useSidebar();
+
+    if (!activeClass) {
+        return (
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <DropdownMenu>
+                        <SidebarMenuButton
+                            size="lg"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                        >
+                            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                <RoleIcon role={"student"} />
+                            </div>
+                            SmartOH
+                        </SidebarMenuButton>
+                    </DropdownMenu>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        );
+    }
+
     const currRole = userClasses.find(
         (cls) => cls.class?.classId === activeClass.classId
     )?.role;
@@ -99,14 +129,36 @@ export function ClassSwitcher() {
                             </Link>
                         ))}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="gap-2 p-2 cursor-pointer">
-                            <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                                <Plus className="size-4" />
-                            </div>
-                            <div className="font-medium text-muted-foreground ">
-                                Add class
-                            </div>
-                        </DropdownMenuItem>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <DropdownMenuItem
+                                    className="gap-2 p-2 cursor-pointer"
+                                    onSelect={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                >
+                                    <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                                        <Plus className="size-4" />
+                                    </div>
+                                    <div className="font-medium text-muted-foreground ">
+                                        Add a Course
+                                    </div>
+                                </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="max-w-4xl">
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        Join or Create a Course
+                                    </AlertDialogTitle>
+                                </AlertDialogHeader>
+                                <ClassForms />
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                        Cancel
+                                    </AlertDialogCancel>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>

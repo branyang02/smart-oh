@@ -1,29 +1,14 @@
+import {
+    getCachedClass,
+    getCachedCourseStaff,
+    getCachedUserClasses
+} from "@/cache";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { ClassProvider } from "@/context/class-context";
 import { auth } from "@/lib/auth";
-import {
-    getClassFromClassId,
-    getCourseStaffForClassFromClassId,
-    getUserClassesFromUserId
-} from "@/lib/classes";
 import { User } from "@/types";
-import { unstable_cache } from "next/cache";
 import React from "react";
-
-const getCachedUserClasses = unstable_cache(
-    getUserClassesFromUserId,
-    ["user-classes"],
-    { revalidate: 3600 }
-);
-const getCachedCourseStaff = unstable_cache(
-    getCourseStaffForClassFromClassId,
-    ["course-staff"],
-    { revalidate: 3600 }
-);
-const getCachedClass = unstable_cache(getClassFromClassId, ["class"], {
-    revalidate: 60
-});
 
 export default async function ClassLayout({
     children,
@@ -52,10 +37,7 @@ export default async function ClassLayout({
 
     return (
         <ClassProvider value={{ userClasses, courseStaff, activeClass }}>
-            <AppSidebar
-                user={user}
-                activeUserIds={[]} // might use this to highlight available TAs
-            />
+            <AppSidebar user={user} />
             <SidebarInset>{children}</SidebarInset>
         </ClassProvider>
     );

@@ -19,7 +19,7 @@ export function AppSidebar({
     activeUserIds
 }: {
     user: User;
-    activeUserIds: string[];
+    activeUserIds?: string[];
 }) {
     return (
         <Sidebar collapsible="icon">

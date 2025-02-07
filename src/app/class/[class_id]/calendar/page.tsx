@@ -7,6 +7,7 @@ import { EventsProvider } from "@/context/events-context";
 
 export default function CalendarPage() {
     const { activeClass } = useClass();
+    if (!activeClass) return null;
 
     return (
         <>
