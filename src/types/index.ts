@@ -16,15 +16,9 @@ export type Class = {
     createdAt: Date;
 }
 
-/**
- * Represents user information along with their role and optional class association
- * @interface UserClass
- * @property {User} user - The user object containing user details
- * @property {UserRole} role - The role assigned to the user
- * @property {Class} [class] - Optional class associated with the user
- */
+
 export type UserClass = {
     user: User;
     role: UserRole;
-    class?: Class;
+    class: Class;
 }

@@ -2,56 +2,59 @@ import { Class, UserClass } from "@/types";
 
 export async function getUserClassesFromUserId(userId: string): Promise<UserClass[]> {
     // TODO: mock data
-    return [
-        {
-            user: {
-                userId,
-                name: "Brandon",
-                email: "brandon@example.com",
-                avatarUrl: ""
+    if (userId == "9c80f4be-bb25-4e23-a7fe-4bbfb3f854c7") {
+        return [
+            {
+                user: {
+                    userId,
+                    name: "Brandon",
+                    email: "brandon@example.com",
+                    avatarUrl: ""
+                },
+                role: "student",
+                class: {
+                    classId: "ml4774",
+                    name: "Machine Learning",
+                    number: "CS4774",
+                    semester: "Fall 2024",
+                    createdAt: new Date()
+                }
             },
-            role: "student",
-            class: {
-                classId: "ml4774",
-                name: "Machine Learning",
-                number: "CS4774",
-                semester: "Fall 2024",
-                createdAt: new Date()
-            }
-        },
-        {
-            user: {
-                userId,
-                name: "Brandon",
-                email: "brandon@example.com",
-                avatarUrl: ""
+            {
+                user: {
+                    userId,
+                    name: "Brandon",
+                    email: "brandon@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId: "cs2130",
+                    name: "Data Structures",
+                    number: "CS2130",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
             },
-            role: "TA",
-            class: {
-                classId: "cs2130",
-                name: "Data Structures",
-                number: "CS2130",
-                semester: "Spring 2024",
-                createdAt: new Date()
+            {
+                user: {
+                    userId,
+                    name: "Brandon",
+                    email: "brandon@example.com",
+                    avatarUrl: ""
+                },
+                role: "instructor",
+                class: {
+                    classId: "cs3100",
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
             }
-        },
-        {
-            user: {
-                userId,
-                name: "Brandon",
-                email: "brandon@example.com",
-                avatarUrl: ""
-            },
-            role: "instructor",
-            class: {
-                classId: "cs3100",
-                name: "Software Engineering",
-                number: "CS3100",
-                semester: "Spring 2024",
-                createdAt: new Date()
-            }
-        }
-    ];
+        ];
+    }
+    return [];
 }
 
 export async function getCourseStaffForClassFromClassId(classId: string): Promise<UserClass[]> {

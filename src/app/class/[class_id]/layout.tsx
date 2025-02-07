@@ -6,8 +6,7 @@ import {
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { ClassProvider } from "@/context/class-context";
-import { auth } from "@/lib/auth";
-import { User } from "@/types";
+import { getUser } from "@/utils/user";
 import React from "react";
 
 export default async function ClassLayout({
@@ -17,14 +16,7 @@ export default async function ClassLayout({
     children: React.ReactNode;
     params: Promise<{ class_id: string }>;
 }) {
-    const session = await auth();
-    const user: User = {
-        userId: session?.user?.id || "000",
-        name: session?.user?.name || "Guest",
-        email: session?.user?.email || "guest@example.com",
-        avatarUrl: session?.user?.image || ""
-    };
-
+    const user = await getUser();
     const classId = (await params).class_id;
 
     const [userClasses, courseStaff, activeClass] = await Promise.all([

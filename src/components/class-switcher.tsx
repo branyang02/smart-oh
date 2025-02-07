@@ -25,6 +25,7 @@ import {
     useSidebar
 } from "@/components/ui/sidebar";
 import { useClass } from "@/context/class-context";
+import Cookies from "js-cookie";
 import {
     BookOpenCheck,
     ChevronsUpDown,
@@ -72,12 +73,12 @@ export function ClassSwitcher() {
     }
 
     const currRole = userClasses.find(
-        (cls) => cls.class?.classId === activeClass.classId
+        (cls) => cls.class.classId === activeClass.classId
     )?.role;
 
     // Remove the active class from the list
     const selectableUserClasses = userClasses.filter(
-        (cls) => cls.class?.classId !== activeClass.classId
+        (cls) => cls.class.classId !== activeClass.classId
     );
 
     return (
@@ -114,17 +115,24 @@ export function ClassSwitcher() {
                         </DropdownMenuLabel>
                         {selectableUserClasses.map((cls) => (
                             <Link
-                                key={cls.class?.classId}
-                                href={`/class/${cls.class?.classId}`}
+                                key={cls.class.classId}
+                                href={`/class/${cls.class.classId}`}
+                                onClick={() => {
+                                    Cookies.set(
+                                        "lastVisitedClassId",
+                                        cls.class.classId,
+                                        { expires: 7 }
+                                    );
+                                }}
                             >
                                 <DropdownMenuItem
-                                    key={cls.class?.name}
+                                    key={cls.class.name}
                                     className="gap-2 p-2 cursor-pointer"
                                 >
                                     <div className="flex size-6 items-center justify-center rounded-sm border">
                                         <RoleIcon role={currRole} />
                                     </div>
-                                    {cls.class?.name}
+                                    {cls.class.name}
                                 </DropdownMenuItem>
                             </Link>
                         ))}
