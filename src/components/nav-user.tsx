@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import Avatar from "@/components/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,7 +16,6 @@ import {
     SidebarMenuItem,
     useSidebar
 } from "@/components/ui/sidebar";
-import { extractInitials } from "@/lib/utils";
 import { User } from "@/types";
 import {
     BadgeCheck,
@@ -29,7 +28,6 @@ import { signOut } from "next-auth/react";
 
 export function NavUser({ user }: { user: User }) {
     const { isMobile } = useSidebar();
-    const initials = extractInitials(user.name);
 
     return (
         <SidebarMenu>
@@ -40,11 +38,7 @@ export function NavUser({ user }: { user: User }) {
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
-                            <Avatar className="h-8 w-8 rounded-lg">
-                                <AvatarFallback className="rounded-lg">
-                                    {initials}
-                                </AvatarFallback>
-                            </Avatar>
+                            <Avatar user={user} />
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-semibold">
                                     {user.name}
@@ -64,11 +58,7 @@ export function NavUser({ user }: { user: User }) {
                     >
                         <DropdownMenuLabel className="p-0 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarFallback className="rounded-lg">
-                                        {initials}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <Avatar user={user} />
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-semibold">
                                         {user.name}

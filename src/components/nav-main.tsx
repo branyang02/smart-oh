@@ -1,15 +1,13 @@
 "use client";
 
+import Avatar from "@/components/avatar";
 import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
-import { extractInitials } from "@/lib/utils";
 import { UserClass } from "@/types";
-
-import { Avatar, AvatarFallback } from "./ui/avatar";
 
 export function NavMain({
     courseStaff,
@@ -34,11 +32,7 @@ export function NavMain({
                                 className={`flex items-center gap-3 p-2 rounded-lg hover:bg-accent hover:text-accent-foreground
                                     ${activeUserIds.includes(ta.user.userId) ? "border-2 border-green-500" : ""}`}
                             >
-                                <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarFallback className="rounded-lg">
-                                        {extractInitials(ta.user.name)}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <Avatar user={ta.user} />
                                 <span className="text-sm font-medium">
                                     {ta.user.name}
                                 </span>
@@ -57,11 +51,7 @@ export function NavMain({
                                 className={`flex items-center gap-3 p-2 rounded-lg hover:bg-accent hover:text-accent-foreground
                                     ${activeUserIds.includes(instructor.user.userId) ? "border-2 border-green-500" : ""}`}
                             >
-                                <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarFallback className="rounded-lg">
-                                        {extractInitials(instructor.user.name)}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <Avatar user={instructor.user} />
                                 <span className="text-sm font-medium">
                                     {instructor.user.name}
                                 </span>
