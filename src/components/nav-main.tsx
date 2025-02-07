@@ -51,15 +51,15 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
                                 asChild
                                 className="h-auto hover:bg-transparent pointer-events-none"
                             >
-                                <div className="flex items-center gap-4">
+                                <span className="flex items-center gap-4">
                                     <Avatar
                                         user={ta.user}
                                         {...(activeUserIds.includes(
                                             ta.user.userId
                                         ) && { status: "active" })}
                                     />
-                                    {ta.user.name}
-                                </div>
+                                    <span>{ta.user.name}</span>
+                                </span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}

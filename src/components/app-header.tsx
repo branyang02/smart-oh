@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import Link from "next/link";
 import React from "react";
 
 interface BreadcrumbLink {
@@ -31,20 +32,15 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     <BreadcrumbList>
                         {breadcrumbs.map((crumb, idx) => {
                             const isLast = idx === breadcrumbs.length - 1;
-
                             // If we have another crumb after this, show a separator
                             return (
                                 <React.Fragment key={idx}>
                                     <BreadcrumbItem>
-                                        {isLast && !crumb.href ? (
+                                        <Link href={crumb.href || "#"}>
                                             <BreadcrumbPage>
                                                 {crumb.label}
                                             </BreadcrumbPage>
-                                        ) : (
-                                            <BreadcrumbLink href={crumb.href}>
-                                                {crumb.label}
-                                            </BreadcrumbLink>
-                                        )}
+                                        </Link>
                                     </BreadcrumbItem>
                                     {!isLast && (
                                         <BreadcrumbSeparator className="hidden md:block" />
