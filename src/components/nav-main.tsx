@@ -1,72 +1,75 @@
 "use client";
 
 import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger
-} from "@/components/ui/collapsible";
-import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem
+    SidebarMenuItem
 } from "@/components/ui/sidebar";
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { extractInitials } from "@/lib/utils";
+import { UserClass } from "@/types";
+
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
 export function NavMain({
-    items
+    courseStaff,
+    activeUserIds = []
 }: {
-    items: {
-        title: string;
-        url: string;
-        icon?: LucideIcon;
-        isActive?: boolean;
-        items?: {
-            title: string;
-            url: string;
-        }[];
-    }[];
+    courseStaff: UserClass[];
+    activeUserIds: string[];
 }) {
+    const tas = courseStaff.filter((staff) => staff.role === "TA");
+    const instructors = courseStaff.filter(
+        (staff) => staff.role === "instructor"
+    );
+
     return (
-        <SidebarGroup>
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
-            <SidebarMenu>
-                {items.map((item) => (
-                    <Collapsible
-                        key={item.title}
-                        asChild
-                        defaultOpen={item.isActive}
-                        className="group/collapsible"
-                    >
-                        <SidebarMenuItem>
-                            <CollapsibleTrigger asChild>
-                                <SidebarMenuButton tooltip={item.title}>
-                                    {item.icon && <item.icon />}
-                                    <span>{item.title}</span>
-                                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                </SidebarMenuButton>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent>
-                                <SidebarMenuSub>
-                                    {item.items?.map((subItem) => (
-                                        <SidebarMenuSubItem key={subItem.title}>
-                                            <SidebarMenuSubButton asChild>
-                                                <a href={subItem.url}>
-                                                    <span>{subItem.title}</span>
-                                                </a>
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                    ))}
-                                </SidebarMenuSub>
-                            </CollapsibleContent>
+        <>
+            <SidebarGroup>
+                <SidebarGroupLabel>TAs</SidebarGroupLabel>
+                <SidebarMenu>
+                    {tas.map((ta) => (
+                        <SidebarMenuItem key={ta.user.userId}>
+                            <div
+                                className={`flex items-center gap-3 p-2 rounded-lg hover:bg-accent hover:text-accent-foreground
+                                    ${activeUserIds.includes(ta.user.userId) ? "border-2 border-green-500" : ""}`}
+                            >
+                                <Avatar className="h-8 w-8 rounded-lg">
+                                    <AvatarFallback className="rounded-lg">
+                                        {extractInitials(ta.user.name)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <span className="text-sm font-medium">
+                                    {ta.user.name}
+                                </span>
+                            </div>
                         </SidebarMenuItem>
-                    </Collapsible>
-                ))}
-            </SidebarMenu>
-        </SidebarGroup>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
+
+            <SidebarGroup>
+                <SidebarGroupLabel>Instructors</SidebarGroupLabel>
+                <SidebarMenu>
+                    {instructors.map((instructor) => (
+                        <SidebarMenuItem key={instructor.user.userId}>
+                            <div
+                                className={`flex items-center gap-3 p-2 rounded-lg hover:bg-accent hover:text-accent-foreground
+                                    ${activeUserIds.includes(instructor.user.userId) ? "border-2 border-green-500" : ""}`}
+                            >
+                                <Avatar className="h-8 w-8 rounded-lg">
+                                    <AvatarFallback className="rounded-lg">
+                                        {extractInitials(instructor.user.name)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <span className="text-sm font-medium">
+                                    {instructor.user.name}
+                                </span>
+                            </div>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarGroup>
+        </>
     );
 }

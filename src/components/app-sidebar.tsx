@@ -12,28 +12,35 @@ import {
     SidebarRail
 } from "@/components/ui/sidebar";
 import mockData from "@/data";
+import { User, UserClass } from "@/types";
 import * as React from "react";
 
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-    user: {
-        name: string;
-        email: string;
-    };
-    classes: {
-        className: string;
-        semester: string;
-        role: "student" | "TA" | "instructor";
-    }[];
-};
-
-export function AppSidebar({ user, classes, ...props }: AppSidebarProps) {
+export function AppSidebar({
+    user,
+    classes,
+    activeClassId,
+    courseStaff,
+    activeUserIds
+}: {
+    user: User;
+    classes: UserClass[];
+    activeClassId: string;
+    courseStaff: UserClass[];
+    activeUserIds: string[];
+}) {
     return (
-        <Sidebar collapsible="icon" {...props}>
+        <Sidebar collapsible="icon">
             <SidebarHeader>
-                <ClassSwitcher classes={classes} />
+                <ClassSwitcher
+                    classes={classes}
+                    activeClassId={activeClassId}
+                />
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={mockData.navMain} />
+                <NavMain
+                    courseStaff={courseStaff}
+                    activeUserIds={activeUserIds}
+                />
                 <NavProjects projects={mockData.projects} />
             </SidebarContent>
             <SidebarFooter>

@@ -16,6 +16,8 @@ import {
     SidebarMenuItem,
     useSidebar
 } from "@/components/ui/sidebar";
+import { extractInitials } from "@/lib/utils";
+import { User } from "@/types";
 import {
     BadgeCheck,
     Bell,
@@ -25,21 +27,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
-function extractInitials(name: string) {
-    return name
-        .split(" ")
-        .map((word) => word[0])
-        .join("");
-}
-
-export function NavUser({
-    user
-}: {
-    user: {
-        name: string;
-        email: string;
-    };
-}) {
+export function NavUser({ user }: { user: User }) {
     const { isMobile } = useSidebar();
     const initials = extractInitials(user.name);
 

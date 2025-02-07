@@ -7,7 +7,7 @@ export default async function CalendarPage({
 }: {
     params: { class_id: string };
 }) {
-    const classTitle = "HEHE";
+    const classTitle = "Machine Learning";
 
     return (
         <>

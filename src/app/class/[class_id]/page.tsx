@@ -1,33 +1,24 @@
 import { AppHeader } from "@/components/app-header";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset } from "@/components/ui/sidebar";
-import mockData from "@/data";
-import { auth } from "@/lib/auth";
-import { ClassItem } from "@/types/index";
 
-export default async function ClassPage() {
-    const session = await auth();
-    const user = {
-        name: session?.user?.name || "Guest",
-        email: session?.user?.email || "guest@example.com"
-    };
-
-    // const classes: ClassItem[] = [];
-    const classes: ClassItem[] = mockData.classes;
+export default async function ClassPage({
+    params
+}: {
+    params: Promise<{ class_id: string }>;
+}) {
+    const class_id = (await params).class_id;
+    // const classTitle = getClassTitleFromId(class_id);
+    const classTitle = "Machine Learning";
 
     return (
         <>
-            <AppSidebar user={user} classes={classes} />
-            <SidebarInset>
-                <AppHeader
-                    breadcrumbs={[
-                        { href: "/class", label: "Join/Create Course" }
-                    ]}
-                />
-                <div className="flex flex-1 flex-col items-center min-h-screen">
-                    <h1>Hi</h1>
-                </div>
-            </SidebarInset>
+            <AppHeader
+                breadcrumbs={[
+                    { href: `/class/${class_id}`, label: classTitle }
+                ]}
+            />
+            <div className="flex flex-1 flex-col items-center min-h-screen">
+                <h1>Class Page</h1>
+            </div>
         </>
     );
 }

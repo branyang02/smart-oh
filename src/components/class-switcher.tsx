@@ -14,7 +14,7 @@ import {
     SidebarMenuItem,
     useSidebar
 } from "@/components/ui/sidebar";
-import { ClassItem } from "@/types";
+import { UserClass } from "@/types";
 import {
     BookOpenCheck,
     ChevronsUpDown,
@@ -22,37 +22,21 @@ import {
     Plus,
     UserCog2
 } from "lucide-react";
-import * as React from "react";
+import Link from "next/link";
 
-const getLastSelectedClass = (classes: ClassItem[]) => {
-    const lastSelectedClassName = localStorage.getItem("lastSelectedClass");
-    if (lastSelectedClassName) {
-        const lastSelectedClass = classes.find(
-            (cls) => cls.className === lastSelectedClassName
-        );
-        return lastSelectedClass || classes[0]; // Fallback to the first class if not found
-    }
-    return classes[0]; // Default to the first class
-};
-
-export function ClassSwitcher({ classes }: { classes: ClassItem[] }) {
+export function ClassSwitcher({
+    classes,
+    activeClassId
+}: {
+    classes: UserClass[];
+    activeClassId: string;
+}) {
     const { isMobile } = useSidebar();
-    const [activeClass, setActiveClass] = React.useState<ClassItem | null>(
-        null
-    );
-
-    React.useEffect(() => {
-        setActiveClass(getLastSelectedClass(classes));
-    }, [classes]);
-
-    const handleClassChange = (cls: ClassItem) => {
-        setActiveClass(cls);
-        localStorage.setItem("lastSelectedClass", cls.className);
-    };
-
-    if (classes.length === 0 || !activeClass) {
-        return null;
-    }
+    const activeClass =
+        classes.find((cls) => cls.class?.classId === activeClassId) ||
+        classes[0];
+    // Remove the active class from the list
+    classes = classes.filter((cls) => cls.class?.classId !== activeClassId);
 
     return (
         <SidebarMenu>
@@ -87,10 +71,10 @@ export function ClassSwitcher({ classes }: { classes: ClassItem[] }) {
                             </div>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-semibold">
-                                    {activeClass.className}
+                                    {activeClass.class?.name}
                                 </span>
                                 <span className="truncate text-xs">
-                                    {activeClass.semester}
+                                    {activeClass.class?.semester}
                                 </span>
                             </div>
                             <ChevronsUpDown className="ml-auto" />
@@ -103,45 +87,49 @@ export function ClassSwitcher({ classes }: { classes: ClassItem[] }) {
                         sideOffset={4}
                     >
                         <DropdownMenuLabel className="text-xs text-muted-foreground">
-                            Teams
+                            Courses
                         </DropdownMenuLabel>
                         {classes.map((cls) => (
-                            <DropdownMenuItem
-                                key={cls.className}
-                                onClick={() => handleClassChange(cls)}
-                                className="gap-2 p-2"
+                            <Link
+                                key={cls.class?.classId}
+                                href={`/class/${cls.class?.classId}`}
                             >
-                                <div className="flex size-6 items-center justify-center rounded-sm border">
-                                    {(() => {
-                                        switch (cls.role) {
-                                            case "student":
-                                                return (
-                                                    <GraduationCap className="size-4 shrink-0" />
-                                                );
-                                            case "TA":
-                                                return (
-                                                    <BookOpenCheck className="size-4 shrink-0" />
-                                                );
-                                            case "instructor":
-                                                return (
-                                                    <UserCog2 className="size-4 shrink-0" />
-                                                );
-                                            default:
-                                                return (
-                                                    <BookOpenCheck className="size-4 shrink-0" />
-                                                );
-                                        }
-                                    })()}
-                                </div>
-                                {cls.className}
-                            </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    key={cls.class?.name}
+                                    className="gap-2 p-2 cursor-pointer"
+                                >
+                                    <div className="flex size-6 items-center justify-center rounded-sm border">
+                                        {(() => {
+                                            switch (cls.role) {
+                                                case "student":
+                                                    return (
+                                                        <GraduationCap className="size-4 shrink-0" />
+                                                    );
+                                                case "TA":
+                                                    return (
+                                                        <BookOpenCheck className="size-4 shrink-0" />
+                                                    );
+                                                case "instructor":
+                                                    return (
+                                                        <UserCog2 className="size-4 shrink-0" />
+                                                    );
+                                                default:
+                                                    return (
+                                                        <BookOpenCheck className="size-4 shrink-0" />
+                                                    );
+                                            }
+                                        })()}
+                                    </div>
+                                    {cls.class?.name}
+                                </DropdownMenuItem>
+                            </Link>
                         ))}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="gap-2 p-2">
+                        <DropdownMenuItem className="gap-2 p-2 cursor-pointer">
                             <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                                 <Plus className="size-4" />
                             </div>
-                            <div className="font-medium text-muted-foreground">
+                            <div className="font-medium text-muted-foreground ">
                                 Add class
                             </div>
                         </DropdownMenuItem>

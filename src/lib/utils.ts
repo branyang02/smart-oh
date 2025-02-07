@@ -11,3 +11,10 @@ export function getDateFromMinutes(minutes: number) {
     now.setMinutes(minutes);
     return now;
 }
+
+export function extractInitials(name: string) {
+    return name
+        .split(" ")
+        .map((word) => word[0])
+        .join("");
+}
