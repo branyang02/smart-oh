@@ -7,10 +7,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
+import { useClass } from "@/context/class-context";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 
-export function NavProjects({ activeClassId }: { activeClassId: string }) {
+export function NavProjects() {
+    const { activeClassId } = useClass();
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>Some title</SidebarGroupLabel>
@@ -22,9 +24,6 @@ export function NavProjects({ activeClassId }: { activeClassId: string }) {
                             <span>Calendar</span>
                         </Link>
                     </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton>Button 2</SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarGroup>

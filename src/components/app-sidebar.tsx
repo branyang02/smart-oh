@@ -11,36 +11,24 @@ import {
     SidebarHeader,
     SidebarRail
 } from "@/components/ui/sidebar";
-import { User, UserClass } from "@/types";
+import { User } from "@/types";
 import * as React from "react";
 
 export function AppSidebar({
     user,
-    classes,
-    activeClassId,
-    courseStaff,
     activeUserIds
 }: {
     user: User;
-    classes: UserClass[];
-    activeClassId: string;
-    courseStaff: UserClass[];
     activeUserIds: string[];
 }) {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <ClassSwitcher
-                    classes={classes}
-                    activeClassId={activeClassId}
-                />
+                <ClassSwitcher />
             </SidebarHeader>
             <SidebarContent>
-                <NavMain
-                    courseStaff={courseStaff}
-                    activeUserIds={activeUserIds}
-                />
-                <NavProjects activeClassId={activeClassId} />
+                <NavMain activeUserIds={activeUserIds} />
+                <NavProjects />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={user} />

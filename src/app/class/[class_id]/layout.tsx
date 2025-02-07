@@ -54,9 +54,6 @@ export default async function ClassLayout({
         >
             <AppSidebar
                 user={user}
-                classes={userClasses}
-                activeClassId={classId}
-                courseStaff={courseStaff}
                 activeUserIds={[]} // might use this to highlight available TAs
             />
             <SidebarInset>{children}</SidebarInset>

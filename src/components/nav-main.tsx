@@ -7,15 +7,11 @@ import {
     SidebarMenu,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
-import { UserClass } from "@/types";
+import { useClass } from "@/context/class-context";
 
-export function NavMain({
-    courseStaff,
-    activeUserIds = []
-}: {
-    courseStaff: UserClass[];
-    activeUserIds: string[];
-}) {
+export function NavMain({ activeUserIds = [] }: { activeUserIds: string[] }) {
+    const { courseStaff } = useClass();
+
     const tas = courseStaff.filter((staff) => staff.role === "TA");
     const instructors = courseStaff.filter(
         (staff) => staff.role === "instructor"

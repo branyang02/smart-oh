@@ -14,7 +14,7 @@ import {
     SidebarMenuItem,
     useSidebar
 } from "@/components/ui/sidebar";
-import { UserClass } from "@/types";
+import { useClass } from "@/context/class-context";
 import {
     BookOpenCheck,
     ChevronsUpDown,
@@ -24,19 +24,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export function ClassSwitcher({
-    classes,
-    activeClassId
-}: {
-    classes: UserClass[];
-    activeClassId: string;
-}) {
+export function ClassSwitcher() {
+    const { activeClassId, userClasses } = useClass();
+
     const { isMobile } = useSidebar();
     const activeClass =
-        classes.find((cls) => cls.class?.classId === activeClassId) ||
-        classes[0];
+        userClasses.find((cls) => cls.class?.classId === activeClassId) ||
+        userClasses[0];
     // Remove the active class from the list
-    classes = classes.filter((cls) => cls.class?.classId !== activeClassId);
+    const classes = userClasses.filter(
+        (cls) => cls.class?.classId !== activeClassId
+    );
 
     return (
         <SidebarMenu>
