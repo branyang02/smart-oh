@@ -6,7 +6,7 @@ export type User = {
     name: string;
     email: string;
     avatarUrl: string;
-}
+};
 
 export type Class = {
     classId: string;
@@ -14,11 +14,10 @@ export type Class = {
     number: string;
     semester: string;
     createdAt: Date;
-}
-
+};
 
 export type UserClass = {
     user: User;
     role: UserRole;
     class: Class;
-}
+};

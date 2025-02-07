@@ -1,6 +1,8 @@
 import { Class, UserClass } from "@/types";
 
-export async function getUserClassesFromUserId(userId: string): Promise<UserClass[]> {
+export async function getUserClassesFromUserId(
+    userId: string
+): Promise<UserClass[]> {
     // TODO: mock data
     if (userId == "9c80f4be-bb25-4e23-a7fe-4bbfb3f854c7") {
         return [
@@ -57,7 +59,9 @@ export async function getUserClassesFromUserId(userId: string): Promise<UserClas
     return [];
 }
 
-export async function getCourseStaffForClassFromClassId(classId: string): Promise<UserClass[]> {
+export async function getCourseStaffForClassFromClassId(
+    classId: string
+): Promise<UserClass[]> {
     // TODO: mock data
     if (classId === "cs3100") {
         return [
@@ -338,7 +342,9 @@ export async function getCourseStaffForClassFromClassId(classId: string): Promis
     return [];
 }
 
-export async function getClassFromClassId(classId: string): Promise<Class | null> {
+export async function getClassFromClassId(
+    classId: string
+): Promise<Class | null> {
     if (classId === "cs3100") {
         return {
             classId,

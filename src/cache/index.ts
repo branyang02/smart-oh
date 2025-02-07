@@ -1,4 +1,8 @@
-import { getClassFromClassId, getCourseStaffForClassFromClassId, getUserClassesFromUserId } from "@/lib/classes";
+import {
+    getClassFromClassId,
+    getCourseStaffForClassFromClassId,
+    getUserClassesFromUserId
+} from "@/lib/classes";
 import { unstable_cache } from "next/cache";
 
 export const getCachedUserClasses = unstable_cache(
