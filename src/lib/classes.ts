@@ -111,6 +111,198 @@ export async function getCourseStaffForClassFromClassId(classId: string): Promis
             },
             {
                 user: {
+                    userId: "user-ta4",
+                    name: "David Tennant",
+                    email: "david@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta5",
+                    name: "Emma Stone",
+                    email: "emma@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta6",
+                    name: "Frank Ocean",
+                    email: "frank@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta7",
+                    name: "Grace Hopper",
+                    email: "grace@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta8",
+                    name: "Harry Potter",
+                    email: "harry@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta9",
+                    name: "Isabella Garcia",
+                    email: "isabella@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta10",
+                    name: "Jack Sparrow",
+                    email: "jack@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta11",
+                    name: "Katherine Johnson",
+                    email: "katherine@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta12",
+                    name: "Leo Messi",
+                    email: "leo@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta13",
+                    name: "Monica Geller",
+                    email: "monica@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta14",
+                    name: "Noah Centineo",
+                    email: "noah@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
+                    userId: "user-ta15",
+                    name: "Olivia Rodrigo",
+                    email: "olivia@example.com",
+                    avatarUrl: ""
+                },
+                role: "TA",
+                class: {
+                    classId,
+                    name: "Software Engineering",
+                    number: "CS3100",
+                    semester: "Spring 2024",
+                    createdAt: new Date()
+                }
+            },
+            {
+                user: {
                     userId: "user-instructor1",
                     name: "Hank Williams",
                     email: "hank@example.com",

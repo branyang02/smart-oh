@@ -5,6 +5,7 @@ import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
+    SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { useClass } from "@/context/class-context";
@@ -29,18 +30,18 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
         <>
             <SidebarGroup>
                 <SidebarGroupLabel>TAs</SidebarGroupLabel>
-                <SidebarMenu>
+                <SidebarMenu className="overflow-scroll max-h-[calc(50vh-4rem)]">
                     {tas.map((ta) => (
-                        <SidebarMenuItem key={ta.user.userId}>
-                            <div
-                                className={`flex items-center gap-3 p-2 rounded-lg hover:bg-accent hover:text-accent-foreground
-                                    ${activeUserIds.includes(ta.user.userId) ? "border-2 border-green-500" : ""}`}
+                        <SidebarMenuItem key={ta.user.userId} className="h-7">
+                            <SidebarMenuButton
+                                asChild
+                                className="h-auto hover:bg-transparent pointer-events-none"
                             >
-                                <Avatar user={ta.user} />
-                                <span className="text-sm font-medium">
+                                <div className="flex items-center gap-4">
+                                    <Avatar user={ta.user} />
                                     {ta.user.name}
-                                </span>
-                            </div>
+                                </div>
+                            </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>
@@ -50,16 +51,19 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
                 <SidebarGroupLabel>Instructors</SidebarGroupLabel>
                 <SidebarMenu>
                     {instructors.map((instructor) => (
-                        <SidebarMenuItem key={instructor.user.userId}>
-                            <div
-                                className={`flex items-center gap-3 p-2 rounded-lg hover:bg-accent hover:text-accent-foreground
-                                    ${activeUserIds.includes(instructor.user.userId) ? "border-2 border-green-500" : ""}`}
+                        <SidebarMenuItem
+                            key={instructor.user.userId}
+                            className="h-10"
+                        >
+                            <SidebarMenuButton
+                                asChild
+                                className="h-auto hover:bg-transparent pointer-events-none"
                             >
-                                <Avatar user={instructor.user} />
-                                <span className="text-sm font-medium">
+                                <div className="flex items-center gap-4">
+                                    <Avatar user={instructor.user} />
                                     {instructor.user.name}
-                                </span>
-                            </div>
+                                </div>
+                            </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>

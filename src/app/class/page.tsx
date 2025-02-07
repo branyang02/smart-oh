@@ -12,7 +12,6 @@ export default async function ClassPage() {
     // This page is only rendered if the user is not in a class
     const user = await getUser();
 
-    // TODO: redirect to prev visited page if user has class
     const userClasses = await Promise.resolve(
         getCachedUserClasses(user.userId)
     );

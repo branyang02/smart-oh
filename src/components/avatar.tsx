@@ -5,30 +5,50 @@ import {
 } from "@/components/ui/avatar";
 import { User } from "@/types";
 
-function stringToColor(string: string) {
-    let hash = 0;
-    let i;
-
-    for (i = 0; i < string.length; i += 1) {
-        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+function stringToColor(letter: string) {
+    // Ensure the input is a single English letter (A-Z, case-insensitive)
+    const normalizedLetter = letter.toUpperCase().charAt(0);
+    if (!/[A-Z]/.test(normalizedLetter)) {
+        throw new Error("Input must be a single English letter (A-Z).");
     }
 
-    let color = "#";
+    // Predefined set of distinct and visually appealing colors
+    const colorMap: { [key: string]: string } = {
+        A: "#FF6B6B",
+        B: "#4ECDC4",
+        C: "#FFEEAD",
+        D: "#A8D8EA",
+        E: "#FF9AA2",
+        F: "#D4A5A5",
+        G: "#6BFFB8",
+        H: "#FFD166",
+        I: "#A5A5D4",
+        J: "#B8E986",
+        K: "#FF9F7F",
+        L: "#83C5BE",
+        M: "#FFD1DC",
+        N: "#A2DDF0",
+        O: "#FFC3A0",
+        P: "#D4A5D4",
+        Q: "#B5EAD7",
+        R: "#FF9A8B",
+        S: "#C7CEEA",
+        T: "#FFB6C1",
+        U: "#A2C8EC",
+        V: "#FFCC99",
+        W: "#B5EAD7",
+        X: "#FF9F9F",
+        Y: "#A8E6CF",
+        Z: "#FF8B94"
+    };
 
-    for (i = 0; i < 3; i += 1) {
-        const value = (hash >> (i * 8)) & 0xff;
-        color += `00${value.toString(16)}`.slice(-2);
-    }
-
-    return color;
+    return colorMap[normalizedLetter];
 }
 
 function stringAvatar(name: string) {
     return {
-        sx: {
-            bgcolor: stringToColor(name)
-        },
-        children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`
+        color: stringToColor(name[0]),
+        initials: `${name[0]}`
     };
 }
 
@@ -38,7 +58,7 @@ export default function Avatar({ user }: { user: User }) {
             <ShadAvatar>
                 <AvatarImage src={user.avatarUrl} alt={user.name} />
                 <AvatarFallback>
-                    {stringAvatar(user.name).children}
+                    {stringAvatar(user.name).initials}
                 </AvatarFallback>
             </ShadAvatar>
         );
@@ -46,8 +66,13 @@ export default function Avatar({ user }: { user: User }) {
 
     return (
         <ShadAvatar>
-            {/* <AvatarImage src={user.avatarUrl} alt={user.name} /> */}
-            <AvatarFallback>{stringAvatar(user.name).children}</AvatarFallback>
+            <AvatarFallback
+                style={{
+                    backgroundColor: `${stringAvatar(user.name).color}`
+                }}
+            >
+                {stringAvatar(user.name).initials}
+            </AvatarFallback>
         </ShadAvatar>
     );
 }

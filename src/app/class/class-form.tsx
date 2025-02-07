@@ -98,7 +98,9 @@ export function ClassForms() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Join Class</Button>
+                        <div className="flex justify-end">
+                            <Button type="submit">Join Class</Button>
+                        </div>
                     </form>
                 </Form>
             </div>
@@ -173,7 +175,9 @@ export function ClassForms() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Create Class</Button>
+                        <div className="flex justify-end">
+                            <Button type="submit">Create Class</Button>
+                        </div>
                     </form>
                 </Form>
             </div>
