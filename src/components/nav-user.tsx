@@ -22,6 +22,7 @@ import {
     Bell,
     ChevronsUpDown,
     CreditCard,
+    LogOut,
     Sparkles
 } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -92,10 +93,9 @@ export function NavUser({ user }: { user: User }) {
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <button type="submit" onClick={() => signOut()}>
-                                Sign Out
-                            </button>
+                        <DropdownMenuItem onClick={() => signOut()}>
+                            <LogOut />
+                            Sign Out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
