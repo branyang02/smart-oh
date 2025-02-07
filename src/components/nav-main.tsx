@@ -21,10 +21,24 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
             </SidebarGroup>
         );
 
-    const tas = courseStaff.filter((staff) => staff.role === "TA");
-    const instructors = courseStaff.filter(
-        (staff) => staff.role === "instructor"
-    );
+    const tas = courseStaff
+        .filter((staff) => staff.role === "TA")
+        .sort((a, b) => {
+            const aActive = activeUserIds.includes(a.user.userId);
+            const bActive = activeUserIds.includes(b.user.userId);
+            if (aActive && !bActive) return -1;
+            if (!aActive && bActive) return 1;
+            return a.user.name.localeCompare(b.user.name);
+        });
+    const instructors = courseStaff
+        .filter((staff) => staff.role === "instructor")
+        .sort((a, b) => {
+            const aActive = activeUserIds.includes(a.user.userId);
+            const bActive = activeUserIds.includes(b.user.userId);
+            if (aActive && !bActive) return -1;
+            if (!aActive && bActive) return 1;
+            return a.user.name.localeCompare(b.user.name);
+        });
 
     return (
         <>
@@ -38,7 +52,12 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
                                 className="h-auto hover:bg-transparent pointer-events-none"
                             >
                                 <div className="flex items-center gap-4">
-                                    <Avatar user={ta.user} />
+                                    <Avatar
+                                        user={ta.user}
+                                        {...(activeUserIds.includes(
+                                            ta.user.userId
+                                        ) && { status: "active" })}
+                                    />
                                     {ta.user.name}
                                 </div>
                             </SidebarMenuButton>
@@ -60,7 +79,12 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
                                 className="h-auto hover:bg-transparent pointer-events-none"
                             >
                                 <div className="flex items-center gap-4">
-                                    <Avatar user={instructor.user} />
+                                    <Avatar
+                                        user={instructor.user}
+                                        {...(activeUserIds.includes(
+                                            instructor.user.userId
+                                        ) && { status: "active" })}
+                                    />{" "}
                                     {instructor.user.name}
                                 </div>
                             </SidebarMenuButton>

@@ -52,10 +52,16 @@ function stringAvatar(name: string) {
     };
 }
 
-export default function Avatar({ user }: { user: User }) {
+export default function Avatar({
+    user,
+    status
+}: {
+    user: User;
+    status?: "active" | "inactive";
+}) {
     if (user.avatarUrl) {
         return (
-            <ShadAvatar>
+            <ShadAvatar status={status}>
                 <AvatarImage src={user.avatarUrl} alt={user.name} />
                 <AvatarFallback>
                     {stringAvatar(user.name).initials}
@@ -65,7 +71,7 @@ export default function Avatar({ user }: { user: User }) {
     }
 
     return (
-        <ShadAvatar>
+        <ShadAvatar status={status}>
             <AvatarFallback
                 style={{
                     backgroundColor: `${stringAvatar(user.name).color}`

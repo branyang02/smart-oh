@@ -27,9 +27,19 @@ export default async function ClassLayout({
 
     if (!activeClass) throw new Error(`Class not found: ${classId}`);
 
+    // Dummy active user ids
+    const activeUserIds = [
+        "user-ta2",
+        "user-ta3",
+        "user-ta4",
+        "user-ta8",
+        "user-instructor1",
+        "user-instructor2"
+    ];
+
     return (
         <ClassProvider value={{ userClasses, courseStaff, activeClass }}>
-            <AppSidebar user={user} />
+            <AppSidebar user={user} activeUserIds={activeUserIds} />
             <SidebarInset>{children}</SidebarInset>
         </ClassProvider>
     );
