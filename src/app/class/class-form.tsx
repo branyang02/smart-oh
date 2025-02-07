@@ -73,7 +73,6 @@ export function ClassForms() {
     const semesterOptions = generateSemesterOptions();
 
     return (
-        // <div className="flex gap-8">
         <div className="flex flex-col md:flex-row w-full max-w-4xl gap-8 mx-auto px-4">
             {/* Join Class Form */}
             <div className="w-full md:flex-1 md:max-w-md rounded-lg border p-3 shadow-sm">

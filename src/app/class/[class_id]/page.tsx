@@ -1,20 +1,33 @@
-export default async function HomePage() {
+import { AppHeader } from "@/components/app-header";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset } from "@/components/ui/sidebar";
+import mockData from "@/data";
+import { auth } from "@/lib/auth";
+import { ClassItem } from "@/types/index";
+
+export default async function ClassPage() {
+    const session = await auth();
+    const user = {
+        name: session?.user?.name || "Guest",
+        email: session?.user?.email || "guest@example.com"
+    };
+
+    // const classes: ClassItem[] = [];
+    const classes: ClassItem[] = mockData.classes;
+
     return (
         <>
-            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
-                    PLACEHOLDER
+            <AppSidebar user={user} classes={classes} />
+            <SidebarInset>
+                <AppHeader
+                    breadcrumbs={[
+                        { href: "/class", label: "Join/Create Course" }
+                    ]}
+                />
+                <div className="flex flex-1 flex-col items-center min-h-screen">
+                    <h1>Hi</h1>
                 </div>
-                <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
-                    PLACEHOLDER
-                </div>
-                <div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
-                    PLACEHOLDER
-                </div>
-            </div>
-            <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min flex items-center justify-center">
-                PLACEHOLDER
-            </div>
+            </SidebarInset>
         </>
     );
 }
