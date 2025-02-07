@@ -130,7 +130,7 @@ export function ClassSwitcher() {
                                     className="gap-2 p-2 cursor-pointer"
                                 >
                                     <div className="flex size-6 items-center justify-center rounded-sm border">
-                                        <RoleIcon role={currRole} />
+                                        <RoleIcon role={cls.role} />
                                     </div>
                                     {cls.class.name}
                                 </DropdownMenuItem>
