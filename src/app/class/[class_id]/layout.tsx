@@ -48,6 +48,8 @@ export default async function ClassLayout({
         getCachedClass(classId)
     ]);
 
+    if (!activeClass) throw new Error(`Class not found: ${classId}`);
+
     return (
         <ClassProvider value={{ userClasses, courseStaff, activeClass }}>
             <AppSidebar

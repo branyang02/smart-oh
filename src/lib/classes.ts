@@ -143,7 +143,7 @@ export async function getCourseStaffForClassFromClassId(classId: string): Promis
     return [];
 }
 
-export async function getClassFromClassId(classId: string): Promise<Class> {
+export async function getClassFromClassId(classId: string): Promise<Class | null> {
     if (classId === "cs3100") {
         return {
             classId,
@@ -169,5 +169,5 @@ export async function getClassFromClassId(classId: string): Promise<Class> {
             createdAt: new Date()
         };
     }
-    throw new Error("Class not found");
+    return null;
 }
