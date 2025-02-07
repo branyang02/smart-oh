@@ -24,16 +24,30 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+function RoleIcon({ role }: { role: string | undefined }) {
+    switch (role) {
+        case "student":
+            return <GraduationCap className="size-4 shrink-0" />;
+        case "TA":
+            return <BookOpenCheck className="size-4 shrink-0" />;
+        case "instructor":
+            return <UserCog2 className="size-4 shrink-0" />;
+        default:
+            return <BookOpenCheck className="size-4 shrink-0" />;
+    }
+}
+
 export function ClassSwitcher() {
-    const { activeClassId, userClasses } = useClass();
+    const { activeClass, userClasses } = useClass();
 
     const { isMobile } = useSidebar();
-    const activeClass =
-        userClasses.find((cls) => cls.class?.classId === activeClassId) ||
-        userClasses[0];
+    const currRole = userClasses.find(
+        (cls) => cls.class?.classId === activeClass.classId
+    )?.role;
+
     // Remove the active class from the list
-    const classes = userClasses.filter(
-        (cls) => cls.class?.classId !== activeClassId
+    const selectableUserClasses = userClasses.filter(
+        (cls) => cls.class?.classId !== activeClass.classId
     );
 
     return (
@@ -46,33 +60,14 @@ export function ClassSwitcher() {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                {(() => {
-                                    switch (activeClass.role) {
-                                        case "student":
-                                            return (
-                                                <GraduationCap className="size-4 shrink-0" />
-                                            );
-                                        case "TA":
-                                            return (
-                                                <BookOpenCheck className="size-4 shrink-0" />
-                                            );
-                                        case "instructor":
-                                            return (
-                                                <UserCog2 className="size-4 shrink-0" />
-                                            );
-                                        default:
-                                            return (
-                                                <BookOpenCheck className="size-4 shrink-0" />
-                                            );
-                                    }
-                                })()}
+                                <RoleIcon role={currRole} />
                             </div>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-semibold">
-                                    {activeClass.class?.name}
+                                    {activeClass.name}
                                 </span>
                                 <span className="truncate text-xs">
-                                    {activeClass.class?.semester}
+                                    {activeClass.semester}
                                 </span>
                             </div>
                             <ChevronsUpDown className="ml-auto" />
@@ -87,7 +82,7 @@ export function ClassSwitcher() {
                         <DropdownMenuLabel className="text-xs text-muted-foreground">
                             Courses
                         </DropdownMenuLabel>
-                        {classes.map((cls) => (
+                        {selectableUserClasses.map((cls) => (
                             <Link
                                 key={cls.class?.classId}
                                 href={`/class/${cls.class?.classId}`}
@@ -97,26 +92,7 @@ export function ClassSwitcher() {
                                     className="gap-2 p-2 cursor-pointer"
                                 >
                                     <div className="flex size-6 items-center justify-center rounded-sm border">
-                                        {(() => {
-                                            switch (cls.role) {
-                                                case "student":
-                                                    return (
-                                                        <GraduationCap className="size-4 shrink-0" />
-                                                    );
-                                                case "TA":
-                                                    return (
-                                                        <BookOpenCheck className="size-4 shrink-0" />
-                                                    );
-                                                case "instructor":
-                                                    return (
-                                                        <UserCog2 className="size-4 shrink-0" />
-                                                    );
-                                                default:
-                                                    return (
-                                                        <BookOpenCheck className="size-4 shrink-0" />
-                                                    );
-                                            }
-                                        })()}
+                                        <RoleIcon role={currRole} />
                                     </div>
                                     {cls.class?.name}
                                 </DropdownMenuItem>

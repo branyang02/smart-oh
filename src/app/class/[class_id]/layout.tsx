@@ -15,14 +15,14 @@ const getCachedUserClasses = unstable_cache(
     getUserClassesFromUserId,
     ["user-classes"],
     { revalidate: 3600 }
-); // cache for 1 hour
+);
 const getCachedCourseStaff = unstable_cache(
     getCourseStaffForClassFromClassId,
     ["course-staff"],
     { revalidate: 3600 }
 );
 const getCachedClass = unstable_cache(getClassFromClassId, ["class"], {
-    revalidate: 3600
+    revalidate: 60
 });
 
 export default async function ClassLayout({
@@ -42,16 +42,14 @@ export default async function ClassLayout({
 
     const classId = (await params).class_id;
 
-    const [userClasses, courseStaff, course] = await Promise.all([
+    const [userClasses, courseStaff, activeClass] = await Promise.all([
         getCachedUserClasses(user.userId),
         getCachedCourseStaff(classId),
         getCachedClass(classId)
     ]);
 
     return (
-        <ClassProvider
-            value={{ userClasses, courseStaff, activeClassId: classId, course }}
-        >
+        <ClassProvider value={{ userClasses, courseStaff, activeClass }}>
             <AppSidebar
                 user={user}
                 activeUserIds={[]} // might use this to highlight available TAs

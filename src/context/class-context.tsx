@@ -6,8 +6,7 @@ import { createContext, useContext } from "react";
 interface ClassContextType {
     userClasses: UserClass[];
     courseStaff: UserClass[];
-    activeClassId: string;
-    course: Class;
+    activeClass: Class;
 }
 
 const ClassContext = createContext<ClassContextType | null>(null);

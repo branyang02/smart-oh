@@ -6,13 +6,16 @@ import { useClass } from "@/context/class-context";
 import { EventsProvider } from "@/context/events-context";
 
 export default function CalendarPage() {
-    const { activeClassId, course } = useClass();
+    const { activeClass } = useClass();
 
     return (
         <>
             <AppHeader
                 breadcrumbs={[
-                    { href: `/class/${activeClassId}`, label: course.name },
+                    {
+                        href: `/class/${activeClass.classId}`,
+                        label: activeClass.name
+                    },
                     { label: "Calendar" }
                 ]}
             />
