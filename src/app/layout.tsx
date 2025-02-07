@@ -1,8 +1,19 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
+
+const geistSans = Geist({
+    variable: "--font-geist-sans",
+    subsets: ["latin"]
+});
+
+const geistMono = Geist_Mono({
+    variable: "--font-geist-mono",
+    subsets: ["latin"]
+});
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -18,16 +29,20 @@ export default async function RootLayout({
         <>
             <html lang="en" suppressHydrationWarning>
                 <head />
-                <body>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="light"
-                        enableSystem={true}
-                        disableTransitionOnChange
-                    >
-                        {children}
-                        <Toaster />
-                    </ThemeProvider>
+                <body
+                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                >
+                    <div className="font-[family-name:var(--font-geist-sans)]">
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="light"
+                            enableSystem={true}
+                            disableTransitionOnChange
+                        >
+                            {children}
+                            <Toaster />
+                        </ThemeProvider>
+                    </div>
                 </body>
             </html>
         </>
