@@ -1,4 +1,4 @@
-import { UserClass } from "@/types";
+import { Class, UserClass } from "@/types";
 
 export async function getUserClassesFromUserId(userId: string): Promise<UserClass[]> {
     // TODO: mock data
@@ -141,4 +141,33 @@ export async function getCourseStaffForClassFromClassId(classId: string): Promis
         ];
     }
     return [];
+}
+
+export async function getClassFromClassId(classId: string): Promise<Class> {
+    if (classId === "cs3100") {
+        return {
+            classId,
+            name: "Software Engineering",
+            number: "CS3100",
+            semester: "Spring 2024",
+            createdAt: new Date()
+        };
+    } else if (classId === "cs2130") {
+        return {
+            classId,
+            name: "Data Structures",
+            number: "CS2130",
+            semester: "Spring 2024",
+            createdAt: new Date()
+        };
+    } else if (classId === "ml4774") {
+        return {
+            classId,
+            name: "Machine Learning",
+            number: "CS4774",
+            semester: "Fall 2024",
+            createdAt: new Date()
+        };
+    }
+    throw new Error("Class not found");
 }

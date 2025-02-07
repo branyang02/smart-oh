@@ -1,19 +1,16 @@
-import { AppHeader } from "@/components/app-header";
+"use client";
 
-export default async function ClassPage({
-    params
-}: {
-    params: Promise<{ class_id: string }>;
-}) {
-    const class_id = (await params).class_id;
-    // const classTitle = getClassTitleFromId(class_id);
-    const classTitle = "Machine Learning";
+import { AppHeader } from "@/components/app-header";
+import { useClass } from "@/context/class-context";
+
+export default function ClassPage() {
+    const { activeClassId, course } = useClass();
 
     return (
         <>
             <AppHeader
                 breadcrumbs={[
-                    { href: `/class/${class_id}`, label: classTitle }
+                    { href: `/class/${activeClassId}`, label: course.name }
                 ]}
             />
             <div className="flex flex-1 flex-col items-center min-h-screen">

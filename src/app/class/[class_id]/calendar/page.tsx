@@ -1,19 +1,18 @@
+"use client";
+
 import { AppHeader } from "@/components/app-header";
 import Calendar from "@/components/calendar";
+import { useClass } from "@/context/class-context";
 import { EventsProvider } from "@/context/events-context";
 
-export default async function CalendarPage({
-    params
-}: {
-    params: { class_id: string };
-}) {
-    const classTitle = "Machine Learning";
+export default function CalendarPage() {
+    const { activeClassId, course } = useClass();
 
     return (
         <>
             <AppHeader
                 breadcrumbs={[
-                    { href: `/class/${params.class_id}`, label: classTitle },
+                    { href: `/class/${activeClassId}`, label: course.name },
                     { label: "Calendar" }
                 ]}
             />

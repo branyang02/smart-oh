@@ -11,7 +11,6 @@ import {
     SidebarHeader,
     SidebarRail
 } from "@/components/ui/sidebar";
-import mockData from "@/data";
 import { User, UserClass } from "@/types";
 import * as React from "react";
 
@@ -41,7 +40,7 @@ export function AppSidebar({
                     courseStaff={courseStaff}
                     activeUserIds={activeUserIds}
                 />
-                <NavProjects projects={mockData.projects} />
+                <NavProjects activeClassId={activeClassId} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={user} />

@@ -1,46 +1,27 @@
 "use client";
 
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
-    SidebarMenuAction,
     SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar
+    SidebarMenuItem
 } from "@/components/ui/sidebar";
-import {
-    Folder,
-    Forward,
-    type LucideIcon,
-    MoreHorizontal,
-    Trash2
-} from "lucide-react";
+import { Calendar } from "lucide-react";
+import Link from "next/link";
 
-export function NavProjects({
-    projects
-}: {
-    projects: {
-        name: string;
-        url: string;
-        icon: LucideIcon;
-    }[];
-}) {
-    const { isMobile } = useSidebar();
-
+export function NavProjects({ activeClassId }: { activeClassId: string }) {
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>Some title</SidebarGroupLabel>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton>Button 1</SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                        <Link href={`/class/${activeClassId}/calendar`}>
+                            <Calendar />
+                            <span>Calendar</span>
+                        </Link>
+                    </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton>Button 2</SidebarMenuButton>
