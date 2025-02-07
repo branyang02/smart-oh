@@ -26,6 +26,9 @@ export default async function ClassLayout({
     ]);
 
     if (!activeClass) throw new Error(`Class not found: ${classId}`);
+    if (!userClasses.some((c) => c.class.classId === classId)) {
+        throw new Error(`You do not have access to class: ${classId}`);
+    }
 
     // Dummy active user ids
     const activeUserIds = [
