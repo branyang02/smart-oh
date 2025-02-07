@@ -93,7 +93,10 @@ export function NavUser({ user }: { user: User }) {
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => signOut()}>
+                        <DropdownMenuItem
+                            onClick={() => signOut()}
+                            className="cursor-pointer"
+                        >
                             <LogOut />
                             Sign Out
                         </DropdownMenuItem>
