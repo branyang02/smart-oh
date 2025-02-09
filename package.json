@@ -10,9 +10,11 @@
     "format": "prettier --write .",
     "db:migrate": "npx drizzle-kit generate",
     "db:push": "npx drizzle-kit push",
-    "test": "vitest",
     "db:seed": "ts-node --project tsconfig.scripts.json src/scripts/db-seed.ts",
-    "db:reset": "ts-node --project tsconfig.scripts.json src/scripts/db-reset.ts"
+    "db:reset": "ts-node --project tsconfig.scripts.json src/scripts/db-reset.ts",
+    "test": "cross-env NODE_ENV=test vitest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
@@ -69,7 +71,15 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.4",
     "@eslint/eslintrc": "^3",
+    "@storybook/addon-essentials": "^8.5.3",
+    "@storybook/addon-interactions": "^8.5.3",
+    "@storybook/addon-onboarding": "^8.5.3",
+    "@storybook/blocks": "^8.5.3",
+    "@storybook/nextjs": "^8.5.3",
+    "@storybook/react": "^8.5.3",
+    "@storybook/test": "^8.5.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
@@ -82,12 +92,19 @@
     "drizzle-kit": "^0.30.4",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "eslint-plugin-storybook": "^0.11.2",
     "jsdom": "^26.0.0",
     "postcss": "^8",
     "prettier": "^3.4.2",
+    "storybook": "^8.5.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }
