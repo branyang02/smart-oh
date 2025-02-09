@@ -4,7 +4,7 @@ import { classes, userClasses, users } from "@/db/schema";
 import { reset } from "drizzle-seed";
 
 async function main() {
-    if (process.env.TEST_ENV !== "true") {
+    if (process.env.PROJECT_ENV !== "test") {
         throw new Error("This script should only run in test environment");
     }
     await reset(db, schema);
