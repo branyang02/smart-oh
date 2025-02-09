@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { reset, seed } from "drizzle-seed";
+import { reset } from "drizzle-seed";
 import * as schema from "@/db/schema";
 import { users, classes, userClasses } from "@/db/schema";
 import { User, Class, UserClass } from "@/types"

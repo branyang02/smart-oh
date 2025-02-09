@@ -1,6 +1,6 @@
 import { getClasses, getClassFromClassId, getUserClassesFromUserId } from '@/db/classes';
 import { getInstructorsFromClassId, getStudentsFromClassId, getTAsFromClassId, getUserFromUserId, getUsers } from '@/db/users';
-import { describe, expect, it, test } from 'vitest';
+import { expect, test } from 'vitest';
 
 test('getClasses', async () => {
     const classes = await getClasses();

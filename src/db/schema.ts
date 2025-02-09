@@ -6,17 +6,17 @@ import {
     primaryKey,
     text,
     timestamp,
-    uniqueIndex
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
+import { createId } from '@paralleldrive/cuid2';
 
 // Auth.js required tables, copied from https://authjs.dev/getting-started/adapters/drizzle?framework=next-js 
 export const users = pgTable("user", {
     id: text("id")
         .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    name: text("name"),
-    email: text("email").unique(),
+        .$defaultFn(() => createId()),
+    name: text("name").notNull(),
+    email: text("email").unique().notNull(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
 })
@@ -97,7 +97,7 @@ export const authenticators = pgTable(
 export const classes = pgTable("class", {
     id: text("id")
         .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
+        .$defaultFn(() => createId()),
     name: text("name").notNull(),
     number: text("number").notNull(),
     semester: text("semester").notNull(),
@@ -120,6 +120,6 @@ export const userClasses = pgTable("user_class", {
 ]
 );
 
-export type User = typeof users.$inferInsert;
-export type Class = typeof classes.$inferInsert;
-export type UserClass = typeof userClasses.$inferInsert;
+export type User = typeof users.$inferSelect;
+export type Class = typeof classes.$inferSelect;
+export type UserClass = typeof userClasses.$inferSelect;
