@@ -52,6 +52,14 @@ const dummyUsers2: User[] = [
     }
 ];
 
+const lotsOfUsers = Array.from({ length: 20 }, (_, i) => ({
+    id: "l-" + i.toString(),
+    name: `Test User ${i + 100}`,
+    email: `test${i + 1}@test.com`,
+    emailVerified: null,
+    image: "https://avatars.githubusercontent.com/u/1?v=4"
+}));
+
 export default {
     component: DraggableQueue,
     title: "DraggableQueue",
@@ -59,26 +67,39 @@ export default {
     args: {
         queueId: "1",
         queueName: "Test Queue",
-        users: dummyUsers
+        users: dummyUsers,
+        height: 500,
+        width: 300
     } as DraggableQueueProps
 };
 
-export const Default = {};
-
-export const MultipleQueues = () => {
+export const Default = () => {
     return (
-        <div>
+        <div style={{ display: "flex", gap: 20 }}>
             <DragPreview />
+
             <DraggableQueue
+                width={300}
+                height={500}
                 queueId="1"
                 queueName="Test Queue 1"
-                users={dummyUsers}
+                users={lotsOfUsers}
             />
 
             <DraggableQueue
+                width={300}
+                height={500}
                 queueId="2"
                 queueName="Test Queue 2"
                 users={dummyUsers2}
+            />
+
+            <DraggableQueue
+                width={300}
+                height={500}
+                queueId="3"
+                queueName="Test Queue 3"
+                users={[]}
             />
         </div>
     );

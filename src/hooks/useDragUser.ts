@@ -50,9 +50,13 @@ class DragUserStore {
         this.notify();
     };
 
-    finishDrag = (dragFinish: DragTarget) => {
-        if (this.drag.type !== "dragging") return;
-        this.onFinishDrag?.(this.drag.user, this.drag.dragStart, dragFinish);
+    finishDrag = () => {
+        if (this.drag.type !== "dragging" || !this.drag.dragEnd) return;
+        this.onFinishDrag?.(
+            this.drag.user,
+            this.drag.dragStart,
+            this.drag.dragEnd
+        );
         this.drag = { type: "none" };
         this.notify();
     };
@@ -73,6 +77,7 @@ dragUserStore.onFinishDrag = (user, dragStart, dragEnd) => {
 };
 
 document.addEventListener("mouseup", (e) => {
+    dragUserStore.finishDrag();
     dragUserStore.cancelDrag();
 });
 

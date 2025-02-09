@@ -6,7 +6,6 @@ export type QueuePositionProps = {
     isPreview?: boolean;
     onDragStart?: (user: User, position: number) => void;
     onDragOver?: (position: number) => void;
-    onDragEnd?: (position: number) => void;
     style?: React.CSSProperties;
 };
 
@@ -16,12 +15,13 @@ export const QueuePosition = ({
     isPreview,
     onDragStart,
     onDragOver,
-    onDragEnd,
     style
 }: QueuePositionProps) => {
     return (
         <div
-            className={`w-full md:flex-1 md:max-w-md rounded-lg border p-3 shadow-sm flex items-center gap-3 bg-white dark:bg-gray-900 ${isPreview ? "opacity-25 bg-gray-300 dark:bg-gray-700" : ""}`}
+            className={`
+							w-full md:flex-1 md:max-w-md rounded-lg border p-3 shadow-sm flex items-center gap-3 bg-white dark:bg-gray-900 
+							${isPreview ? "opacity-25 bg-gray-300 dark:bg-gray-700" : ""}`}
             style={{
                 position: "relative",
                 userSelect: "none",
@@ -30,16 +30,11 @@ export const QueuePosition = ({
             }}
             onMouseDown={(e) => {
                 e.stopPropagation();
-                console.log("onMouseDown");
                 onDragStart?.(user, position);
             }}
         >
             <div
-                // The fix for the top half - drag over for before
-                onMouseUp={(e) => {
-                    e.stopPropagation();
-                    onDragEnd?.(position);
-                }}
+                // The area for the top half - drag over for before
                 onMouseOver={(e) => {
                     // Check left button down
                     if (e.buttons === 1) {
@@ -56,11 +51,7 @@ export const QueuePosition = ({
                 }}
             ></div>
             <div
-                // The fix for the bottom half - drag over for before
-                onMouseUp={(e) => {
-                    e.stopPropagation();
-                    onDragEnd?.(position + 1);
-                }}
+                // The area for the bottom half - drag over for before
                 onMouseOver={(e) => {
                     // Check left button down
                     if (e.buttons === 1) {
