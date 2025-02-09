@@ -7,6 +7,7 @@ export default {
     title: "QueuePosition",
     tags: ["autodocs"],
     args: {
+        onClickDrag: fn(),
         position: 1,
         user: {
             id: "1",
