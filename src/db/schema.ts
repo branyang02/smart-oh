@@ -14,7 +14,7 @@ import { createId } from '@paralleldrive/cuid2';
 export const users = pgTable("user", {
     id: text("id")
         .primaryKey()
-        .$defaultFn(() => createId()),
+        .$defaultFn(() => crypto.randomUUID()),
     name: text("name").notNull(),
     email: text("email").unique().notNull(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -97,7 +97,7 @@ export const authenticators = pgTable(
 export const classes = pgTable("class", {
     id: text("id")
         .primaryKey()
-        .$defaultFn(() => createId()),
+        .$defaultFn(() => crypto.randomUUID()),
     name: text("name").notNull(),
     number: text("number").notNull(),
     semester: text("semester").notNull(),

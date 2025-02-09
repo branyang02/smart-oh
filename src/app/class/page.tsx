@@ -41,7 +41,7 @@ export default async function ClassPage() {
                     ]}
                 />
                 <div className="flex flex-1 flex-col min-h-screen">
-                    <ClassForms />
+                    <ClassForms user={user} />
                 </div>
             </SidebarInset>
         </>

@@ -17,6 +17,8 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
+import { createAndJoinClass, joinClassFromClassId } from "@/db/classes";
+import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,7 +47,7 @@ function generateSemesterOptions() {
     return options;
 }
 
-export function ClassForms() {
+export function ClassForms({ user }: { user: User }) {
     const joinForm = useForm<z.infer<typeof joinClassSchema>>({
         resolver: zodResolver(joinClassSchema),
         defaultValues: {
@@ -62,12 +64,19 @@ export function ClassForms() {
         }
     });
 
-    function onJoinSubmit(values: z.infer<typeof joinClassSchema>) {
+    async function onJoinSubmit(values: z.infer<typeof joinClassSchema>) {
         console.log("Join class:", values);
+        await joinClassFromClassId(user.id, values.classCode, "student");
     }
 
-    function onCreateSubmit(values: z.infer<typeof createClassSchema>) {
+    async function onCreateSubmit(values: z.infer<typeof createClassSchema>) {
         console.log("Create class:", values);
+        await createAndJoinClass(
+            user.id,
+            values.name,
+            values.number,
+            values.semester
+        );
     }
 
     const semesterOptions = generateSemesterOptions();
