@@ -11,7 +11,7 @@ import {
 import { useClass } from "@/context/class-context";
 
 export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
-    const { courseStaff, activeClass } = useClass();
+    const { courseTAs, courseInstructors, activeClass } = useClass();
     if (!activeClass)
         return (
             <SidebarGroup>
@@ -21,44 +21,25 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
             </SidebarGroup>
         );
 
-    const tas = courseStaff
-        .filter((staff) => staff.role === "TA")
-        .sort((a, b) => {
-            const aActive = activeUserIds.includes(a.user.userId);
-            const bActive = activeUserIds.includes(b.user.userId);
-            if (aActive && !bActive) return -1;
-            if (!aActive && bActive) return 1;
-            return a.user.name.localeCompare(b.user.name);
-        });
-    const instructors = courseStaff
-        .filter((staff) => staff.role === "instructor")
-        .sort((a, b) => {
-            const aActive = activeUserIds.includes(a.user.userId);
-            const bActive = activeUserIds.includes(b.user.userId);
-            if (aActive && !bActive) return -1;
-            if (!aActive && bActive) return 1;
-            return a.user.name.localeCompare(b.user.name);
-        });
-
     return (
         <>
             <SidebarGroup>
                 <SidebarGroupLabel>TAs</SidebarGroupLabel>
                 <SidebarMenu className="overflow-scroll max-h-[calc(50vh-4rem)]">
-                    {tas.map((ta) => (
-                        <SidebarMenuItem key={ta.user.userId} className="h-7">
+                    {courseTAs?.map((ta) => (
+                        <SidebarMenuItem key={ta.id} className="h-7">
                             <SidebarMenuButton
                                 asChild
                                 className="h-auto hover:bg-transparent pointer-events-none"
                             >
                                 <span className="flex items-center gap-4">
                                     <Avatar
-                                        user={ta.user}
-                                        {...(activeUserIds.includes(
-                                            ta.user.userId
-                                        ) && { status: "active" })}
+                                        user={ta}
+                                        {...(activeUserIds.includes(ta.id) && {
+                                            status: "active"
+                                        })}
                                     />
-                                    <span>{ta.user.name}</span>
+                                    <span>{ta.name}</span>
                                 </span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -69,23 +50,20 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
             <SidebarGroup>
                 <SidebarGroupLabel>Instructors</SidebarGroupLabel>
                 <SidebarMenu>
-                    {instructors.map((instructor) => (
-                        <SidebarMenuItem
-                            key={instructor.user.userId}
-                            className="h-10"
-                        >
+                    {courseInstructors?.map((instructor) => (
+                        <SidebarMenuItem key={instructor.id} className="h-10">
                             <SidebarMenuButton
                                 asChild
                                 className="h-auto hover:bg-transparent pointer-events-none"
                             >
                                 <div className="flex items-center gap-4">
                                     <Avatar
-                                        user={instructor.user}
+                                        user={instructor}
                                         {...(activeUserIds.includes(
-                                            instructor.user.userId
+                                            instructor.id
                                         ) && { status: "active" })}
                                     />{" "}
-                                    {instructor.user.name}
+                                    {instructor.name}
                                 </div>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

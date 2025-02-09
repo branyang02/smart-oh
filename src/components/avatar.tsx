@@ -59,10 +59,10 @@ export default function Avatar({
     user: User;
     status?: "active" | "inactive";
 }) {
-    if (user.avatarUrl) {
+    if (user.image) {
         return (
             <ShadAvatar status={status}>
-                <AvatarImage src={user.avatarUrl} alt={user.name} />
+                <AvatarImage src={user.image} alt={user.name} />
                 <AvatarFallback>
                     {stringAvatar(user.name).initials}
                 </AvatarFallback>
@@ -71,7 +71,7 @@ export default function Avatar({
     }
 
     return (
-        <ShadAvatar status={status}>
+        <ShadAvatar status={status} className="border-2 border-background">
             <AvatarFallback
                 style={{
                     backgroundColor: `${stringAvatar(user.name).color}`

@@ -20,7 +20,7 @@ export function NavProjects() {
             <SidebarGroupLabel>Others</SidebarGroupLabel>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <Link href={`/class/${activeClass.classId}/calendar`}>
+                    <Link href={`/class/${activeClass.id}/calendar`}>
                         <SidebarMenuButton asChild tooltip="Calendar">
                             <span className="flex items-center gap-2">
                                 <Calendar />

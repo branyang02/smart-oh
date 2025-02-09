@@ -10,6 +10,7 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import { AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Error({
@@ -19,6 +20,8 @@ export default function Error({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    const router = useRouter();
+
     useEffect(() => {
         console.error(error);
     }, [error]);
@@ -35,6 +38,9 @@ export default function Error({
                     </Alert>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
+                    <AlertDialogAction onClick={() => router.push("/")}>
+                        Go Home
+                    </AlertDialogAction>
                     <AlertDialogAction onClick={reset}>
                         Try again
                     </AlertDialogAction>

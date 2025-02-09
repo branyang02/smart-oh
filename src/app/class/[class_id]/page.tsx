@@ -12,7 +12,7 @@ export default function ClassPage() {
             <AppHeader
                 breadcrumbs={[
                     {
-                        href: `/class/${activeClass.classId}`,
+                        href: `/class/${activeClass.id}`,
                         label: activeClass.name
                     }
                 ]}

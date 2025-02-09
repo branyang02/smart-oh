@@ -72,13 +72,11 @@ export function ClassSwitcher() {
         );
     }
 
-    const currRole = userClasses.find(
-        (cls) => cls.class.classId === activeClass.classId
-    )?.role;
+    const currRole = userClasses.find((cls) => cls.id === activeClass.id)?.role;
 
     // Remove the active class from the list
     const selectableUserClasses = userClasses.filter(
-        (cls) => cls.class.classId !== activeClass.classId
+        (cls) => cls.id !== activeClass.id
     );
 
     return (
@@ -115,24 +113,22 @@ export function ClassSwitcher() {
                         </DropdownMenuLabel>
                         {selectableUserClasses.map((cls) => (
                             <Link
-                                key={cls.class.classId}
-                                href={`/class/${cls.class.classId}`}
+                                key={cls.id}
+                                href={`/class/${cls.id}`}
                                 onClick={() => {
-                                    Cookies.set(
-                                        "lastVisitedClassId",
-                                        cls.class.classId,
-                                        { expires: 7 }
-                                    );
+                                    Cookies.set("lastVisitedClassId", cls.id, {
+                                        expires: 7
+                                    });
                                 }}
                             >
                                 <DropdownMenuItem
-                                    key={cls.class.name}
+                                    key={cls.name}
                                     className="gap-2 p-2 cursor-pointer"
                                 >
                                     <div className="flex size-6 items-center justify-center rounded-sm border">
                                         <RoleIcon role={cls.role} />
                                     </div>
-                                    {cls.class.name}
+                                    {cls.name}
                                 </DropdownMenuItem>
                             </Link>
                         ))}

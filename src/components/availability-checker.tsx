@@ -9,7 +9,7 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { useEvents } from "@/context/events-context";
-import { getDateFromMinutes } from "@/lib/utils";
+import { getDateFromMinutes } from "@/utils/calendar-utils";
 import { CalendarEvent, earliestTime, latestTime } from "@/utils/data";
 import { DateTime, Duration, Interval } from "luxon";
 import Script from "next/script";

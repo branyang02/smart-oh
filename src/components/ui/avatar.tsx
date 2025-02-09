@@ -27,7 +27,7 @@ const Avatar = React.forwardRef<
         {status !== "none" && (
             <span
                 className={cn(
-                    "absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white",
+                    "absolute bottom-1 right-1 h-2 w-2 rounded-full border border-white",
                     status === "active" ? "bg-green-500" : "bg-yellow-500"
                 )}
             />

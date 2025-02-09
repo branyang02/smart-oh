@@ -1,14 +1,12 @@
 import { auth } from "@/lib/auth";
 import { User } from "@/types";
 
-export async function getUser() {
+export async function getUser(): Promise<User> {
     const session = await auth();
-    const user: User = {
-        userId: session?.user?.id || "000",
+    return {
+        id: session?.user?.id || "guest-id",
         name: session?.user?.name || "Guest",
         email: session?.user?.email || "guest@example.com",
-        avatarUrl: session?.user?.image || ""
+        image: session?.user?.image || ""
     };
-
-    return user;
 }

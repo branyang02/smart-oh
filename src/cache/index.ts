@@ -1,20 +1,23 @@
 import {
     getClassFromClassId,
-    getCourseStaffForClassFromClassId,
-    getUserClassesFromUserId
-} from "@/lib/classes";
+    getUserClassesFromUserId,
+} from "@/db/classes";
+import { getInstructorsFromClassId, getTAsFromClassId } from "@/db/users";
 import { unstable_cache } from "next/cache";
 
-export const getCachedUserClasses = unstable_cache(
+export const getCachedUserClassesFromUserId = unstable_cache(
     getUserClassesFromUserId,
     ["user-classes"],
     { revalidate: 1 }
 );
-export const getCachedCourseStaff = unstable_cache(
-    getCourseStaffForClassFromClassId,
-    ["course-staff"],
+export const getCachedTAsFromClassId = unstable_cache(getTAsFromClassId, ["tas"], {
+    revalidate: 1
+});
+export const getCachedInstructorsFromClassId = unstable_cache(
+    getInstructorsFromClassId,
+    ["instructors"],
     { revalidate: 1 }
 );
-export const getCachedClass = unstable_cache(getClassFromClassId, ["class"], {
+export const getCachedClassFromClassId = unstable_cache(getClassFromClassId, ["class"], {
     revalidate: 1
 });

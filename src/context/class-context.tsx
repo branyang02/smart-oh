@@ -1,11 +1,14 @@
 "use client";
 
-import { Class, UserClass } from "@/types";
+import { Class, User } from "@/types";
 import { createContext, useContext } from "react";
 
 interface ClassContextType {
-    userClasses: UserClass[];
-    courseStaff: UserClass[];
+    userClasses: (Class & {
+        role: string;
+    })[];
+    courseTAs?: User[];
+    courseInstructors?: User[];
     activeClass?: Class;
 }
 
