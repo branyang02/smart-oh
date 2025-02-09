@@ -25,6 +25,7 @@ import {
     useSidebar
 } from "@/components/ui/sidebar";
 import { useClass } from "@/context/class-context";
+import { User } from "@/types";
 import Cookies from "js-cookie";
 import {
     BookOpenCheck,
@@ -48,7 +49,7 @@ function RoleIcon({ role }: { role: string | undefined }) {
     }
 }
 
-export function ClassSwitcher() {
+export function ClassSwitcher({ user }: { user: User }) {
     const { activeClass, userClasses } = useClass();
     const { isMobile } = useSidebar();
 
@@ -155,7 +156,7 @@ export function ClassSwitcher() {
                                         Join or Create a Course
                                     </AlertDialogTitle>
                                 </AlertDialogHeader>
-                                <ClassForms />
+                                <ClassForms user={user} />
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>
                                         Cancel

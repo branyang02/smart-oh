@@ -18,8 +18,10 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { createAndJoinClass, joinClassFromClassId } from "@/db/classes";
+import { useToast } from "@/hooks/use-toast";
 import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -48,6 +50,9 @@ function generateSemesterOptions() {
 }
 
 export function ClassForms({ user }: { user: User }) {
+    const { toast } = useToast();
+    const router = useRouter();
+
     const joinForm = useForm<z.infer<typeof joinClassSchema>>({
         resolver: zodResolver(joinClassSchema),
         defaultValues: {
@@ -65,18 +70,68 @@ export function ClassForms({ user }: { user: User }) {
     });
 
     async function onJoinSubmit(values: z.infer<typeof joinClassSchema>) {
-        console.log("Join class:", values);
-        await joinClassFromClassId(user.id, values.classCode, "student");
+        try {
+            const res = await joinClassFromClassId(
+                user.id,
+                values.classCode,
+                "student"
+            );
+            toast({
+                title: "Success!",
+                description: "You have joined the class.",
+                variant: "default"
+            });
+            router.push(`/class/${res.classId}`);
+        } catch (error) {
+            joinForm.setError("classCode", {
+                type: "manual",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Invalid class code"
+            });
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description:
+                    error instanceof Error
+                        ? error.message
+                        : "There was a problem with your request.",
+                variant: "destructive"
+            });
+        }
     }
 
     async function onCreateSubmit(values: z.infer<typeof createClassSchema>) {
-        console.log("Create class:", values);
-        await createAndJoinClass(
-            user.id,
-            values.name,
-            values.number,
-            values.semester
-        );
+        try {
+            const res = await createAndJoinClass(
+                user.id,
+                values.name,
+                values.number,
+                values.semester
+            );
+            toast({
+                title: "Success!",
+                description: "Class created successfully.",
+                variant: "default"
+            });
+            router.push(`/class/${res.id}`);
+        } catch (error) {
+            createForm.setError("name", {
+                type: "manual",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "There was a problem creating the class."
+            });
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description:
+                    error instanceof Error
+                        ? error.message
+                        : "There was a problem with your request.",
+                variant: "destructive"
+            });
+        }
     }
 
     const semesterOptions = generateSemesterOptions();

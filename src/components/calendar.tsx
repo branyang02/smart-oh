@@ -1,8 +1,8 @@
 "use client";
 
 import { useEvents } from "@/context/events-context";
-import { getDateFromMinutes } from "@/utils/calendar-utils";
 import "@/styles/calendar.css";
+import { getDateFromMinutes } from "@/utils/calendar-utils";
 import { CalendarEvent, earliestTime, latestTime } from "@/utils/data";
 import {
     DateSelectArg,

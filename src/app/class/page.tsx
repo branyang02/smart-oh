@@ -20,7 +20,10 @@ export default async function ClassPage() {
         const lastVisitedClassId = (await cookieStore).get(
             "lastVisitedClassId"
         )?.value;
-        if (lastVisitedClassId) {
+        if (
+            lastVisitedClassId &&
+            userClasses.some((c) => c.id === lastVisitedClassId)
+        ) {
             console.log("redirecting to last visited class");
             redirect(`/class/${lastVisitedClassId}`);
         } else {

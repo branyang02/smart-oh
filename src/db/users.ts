@@ -1,12 +1,13 @@
+"use server";
+
 /**
- * This file contains functions that either retrieve data from 
+ * This file contains functions that either retrieve data from
  * the 'users' table or write data to it.
  */
-
-import { User } from "@/types";
 import { db } from "@/db";
+import { userClasses, users } from "@/db/schema";
+import { User } from "@/types";
 import { and, eq } from "drizzle-orm";
-import { users, userClasses } from "@/db/schema";
 
 export async function getUsers(): Promise<User[]> {
     const result = await db.select().from(users);
@@ -25,25 +26,34 @@ export async function getTAsFromClassId(classId: string): Promise<User[]> {
             name: users.name,
             email: users.email,
             emailVerified: users.emailVerified,
-            image: users.image,
+            image: users.image
         })
         .from(userClasses)
         .innerJoin(users, eq(userClasses.userId, users.id))
-        .where(and(eq(userClasses.role, "TA"), eq(userClasses.classId, classId)));
+        .where(
+            and(eq(userClasses.role, "TA"), eq(userClasses.classId, classId))
+        );
 }
 
-export async function getInstructorsFromClassId(classId: string): Promise<User[]> {
+export async function getInstructorsFromClassId(
+    classId: string
+): Promise<User[]> {
     return await db
         .select({
             id: users.id,
             name: users.name,
             email: users.email,
             emailVerified: users.emailVerified,
-            image: users.image,
+            image: users.image
         })
         .from(userClasses)
         .innerJoin(users, eq(userClasses.userId, users.id))
-        .where(and(eq(userClasses.role, "instructor"), eq(userClasses.classId, classId)));
+        .where(
+            and(
+                eq(userClasses.role, "instructor"),
+                eq(userClasses.classId, classId)
+            )
+        );
 }
 
 export async function getStudentsFromClassId(classId: string): Promise<User[]> {
@@ -53,9 +63,14 @@ export async function getStudentsFromClassId(classId: string): Promise<User[]> {
             name: users.name,
             email: users.email,
             emailVerified: users.emailVerified,
-            image: users.image,
+            image: users.image
         })
         .from(userClasses)
         .innerJoin(users, eq(userClasses.userId, users.id))
-        .where(and(eq(userClasses.role, "student"), eq(userClasses.classId, classId)));
+        .where(
+            and(
+                eq(userClasses.role, "student"),
+                eq(userClasses.classId, classId)
+            )
+        );
 }

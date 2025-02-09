@@ -14,7 +14,7 @@ export default function CalendarPage() {
             <AppHeader
                 breadcrumbs={[
                     {
-                        href: `/class/${activeClass.classId}`,
+                        href: `/class/${activeClass.id}`,
                         label: activeClass.name
                     },
                     { label: "Calendar" }

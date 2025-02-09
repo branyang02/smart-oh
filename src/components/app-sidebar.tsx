@@ -24,7 +24,7 @@ export function AppSidebar({
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <ClassSwitcher />
+                <ClassSwitcher user={user} />
             </SidebarHeader>
             <SidebarContent>
                 <NavMain activeUserIds={activeUserIds} />

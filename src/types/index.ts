@@ -1,1 +1,1 @@
-export type { User, Class, UserClass } from '@/db/schema';
+export type { User, Class, UserClass } from "@/db/schema";
