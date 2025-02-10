@@ -60,6 +60,14 @@ const lotsOfUsers = Array.from({ length: 20 }, (_, i) => ({
     image: "https://avatars.githubusercontent.com/u/1?v=4"
 }));
 
+const lotsOfUsers2 = Array.from({ length: 40 }, (_, i) => ({
+    id: "l2-" + i.toString(),
+    name: `Test User ${i + 200}`,
+    email: `test${i + 12312}@test.com`,
+    emailVerified: null,
+    image: "https://avatars.githubusercontent.com/u/1?v=4"
+}));
+
 export default {
     component: DraggableQueue,
     title: "DraggableQueue",
@@ -105,9 +113,9 @@ export const Default = () => {
     );
 };
 
-export const LongQueue = () => {
+export const MultiLongQueue = () => {
     return (
-        <div>
+        <div style={{ display: "flex", gap: 20 }}>
             <DragPreview />
 
             <DraggableQueue
@@ -116,6 +124,14 @@ export const LongQueue = () => {
                 queueId="1"
                 queueName="Test Queue 1"
                 users={lotsOfUsers}
+            />
+
+            <DraggableQueue
+                width={300}
+                height={500}
+                queueId="2"
+                queueName="Test Queue 2"
+                users={lotsOfUsers2}
             />
         </div>
     );
