@@ -3,7 +3,6 @@ dotenv.config({ path: ".env.local" });
 
 import { db } from "../db/index";
 import { users, userClasses, classes } from "../db/schema";
-import { seed } from "drizzle-seed"
 import { createId } from "@paralleldrive/cuid2";
 
 

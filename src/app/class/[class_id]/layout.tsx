@@ -1,12 +1,8 @@
-import {
-    getCachedClassFromClassId,
-    getCachedInstructorsFromClassId,
-    getCachedTAsFromClassId,
-    getCachedUserClassesFromUserId
-} from "@/cache";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { ClassProvider } from "@/context/class-context";
+import { getClassFromClassId, getUserClassesFromUserId } from "@/db/classes";
+import { getInstructorsFromClassId, getTAsFromClassId } from "@/db/users";
 import { getUser } from "@/utils/user-utils";
 import React from "react";
 
@@ -22,16 +18,22 @@ export default async function ClassLayout({
 
     const [userClasses, courseTAs, courseInstructors, activeClass] =
         await Promise.all([
-            getCachedUserClassesFromUserId(user.id),
-            getCachedTAsFromClassId(classId),
-            getCachedInstructorsFromClassId(classId),
-            getCachedClassFromClassId(classId)
+            getUserClassesFromUserId(user.id),
+            getTAsFromClassId(classId),
+            getInstructorsFromClassId(classId),
+            getClassFromClassId(classId)
         ]);
 
-    if (!activeClass) throw new Error(`Class not found: ${classId}`);
-    if (!userClasses.some((c) => c.id === classId)) {
+    if (!activeClass) {
+        throw new Error(`Class not found: ${classId}`);
+    }
+
+    const userClass = userClasses.find((c) => c.id === classId);
+    if (!userClass) {
         throw new Error(`You do not have access to class: ${classId}`);
     }
+
+    const activeRole = userClass.role;
 
     // TODO: Dummy active user ids
     const activeUserIds = [
@@ -45,7 +47,13 @@ export default async function ClassLayout({
 
     return (
         <ClassProvider
-            value={{ userClasses, courseTAs, courseInstructors, activeClass }}
+            value={{
+                userClasses,
+                courseTAs,
+                courseInstructors,
+                activeClass,
+                activeRole
+            }}
         >
             <AppSidebar user={user} activeUserIds={activeUserIds} />
             <SidebarInset>{children}</SidebarInset>

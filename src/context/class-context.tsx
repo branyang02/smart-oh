@@ -1,15 +1,16 @@
 "use client";
 
-import { Class, User } from "@/types";
+import { Class, Role, User } from "@/types";
 import { createContext, useContext } from "react";
 
 interface ClassContextType {
     userClasses: (Class & {
-        role: string;
+        role: Role;
     })[];
     courseTAs?: User[];
     courseInstructors?: User[];
     activeClass?: Class;
+    activeRole?: Role;
 }
 
 const ClassContext = createContext<ClassContextType | null>(null);

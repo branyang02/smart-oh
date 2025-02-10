@@ -6,7 +6,7 @@
  */
 import { db } from "@/db";
 import { UserClass, classes, userClasses, users } from "@/db/schema";
-import { Class } from "@/types";
+import { Class, Role } from "@/types";
 import { and, eq } from "drizzle-orm";
 
 export async function getClasses(): Promise<Class[]> {
@@ -26,7 +26,7 @@ export async function getClassFromClassId(
 
 export async function getUserClassesFromUserId(
     userId: string
-): Promise<(Class & { role: string })[]> {
+): Promise<(Class & { role: Role })[]> {
     const result = await db
         .select({
             id: classes.id,
@@ -68,7 +68,7 @@ export async function createAndJoinClass(
 export async function joinClassFromClassId(
     userId: string,
     classId: string,
-    role: "student" | "TA" | "instructor"
+    role: Role
 ): Promise<UserClass> {
     // assert user exists
     const user = await db.select().from(users).where(eq(users.id, userId));

@@ -8,7 +8,7 @@ import {
     SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { useClass } from "@/context/class-context";
-import { Calendar } from "lucide-react";
+import { Calendar, Settings } from "lucide-react";
 import Link from "next/link";
 
 export function NavProjects() {
@@ -19,6 +19,16 @@ export function NavProjects() {
         <SidebarGroup>
             <SidebarGroupLabel>Others</SidebarGroupLabel>
             <SidebarMenu>
+                <SidebarMenuItem>
+                    <Link href={`/class/${activeClass.id}/settings`}>
+                        <SidebarMenuButton asChild tooltip="Settings">
+                            <span className="flex items-center gap-2">
+                                <Settings />
+                                <span>Settings</span>
+                            </span>
+                        </SidebarMenuButton>
+                    </Link>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                     <Link href={`/class/${activeClass.id}/calendar`}>
                         <SidebarMenuButton asChild tooltip="Calendar">

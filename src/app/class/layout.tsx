@@ -1,7 +1,7 @@
-import { getCachedUserClassesFromUserId } from "@/cache";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ClassProvider } from "@/context/class-context";
 import { EventsProvider } from "@/context/events-context";
+import { getUserClassesFromUserId } from "@/db/classes";
 import { getUser } from "@/utils/user-utils";
 
 export default async function BaseLayout({
@@ -11,7 +11,7 @@ export default async function BaseLayout({
 }) {
     const user = await getUser();
     const userClasses = await Promise.resolve(
-        getCachedUserClassesFromUserId(user.id)
+        getUserClassesFromUserId(user.id)
     );
 
     return (
