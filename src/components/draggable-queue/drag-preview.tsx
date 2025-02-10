@@ -2,6 +2,7 @@ import { useDragObserver } from "@/hooks/useDragUser";
 import { User } from "@/types";
 import { useEffect, useState } from "react";
 
+import { QUEUE_ELEMENT_HEIGHT } from "./constants";
 import { QueuePosition } from "./queue-position";
 
 export type DragPreviewProps = {
@@ -44,6 +45,7 @@ export const DragPreview = () => {
             }}
         >
             <QueuePosition
+                height={QUEUE_ELEMENT_HEIGHT}
                 position={
                     drag.dragEnd?.queuePosition ?? drag.dragStart.queuePosition
                 }

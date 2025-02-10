@@ -1,15 +1,24 @@
 import { User } from "@/types";
 
 export type QueuePositionProps = {
+    height: number;
     position: number; // The index. To be rendered as p+1
     user: User;
     isPreview?: boolean;
-    onDragStart?: (user: User, position: number) => void;
-    onDragOver?: (position: number) => void;
+    onDragStart?: (
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        user: User,
+        position: number
+    ) => void;
+    onDragOver?: (
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        position: number
+    ) => void;
     style?: React.CSSProperties;
 };
 
 export const QueuePosition = ({
+    height,
     position,
     user,
     isPreview,
@@ -20,17 +29,12 @@ export const QueuePosition = ({
     return (
         <div
             className={`
-							w-full md:flex-1 md:max-w-md rounded-lg border p-3 shadow-sm flex items-center gap-3 bg-white dark:bg-gray-900 
+							w-full rounded-lg border p-3 shadow-sm flex items-center gap-3 bg-white dark:bg-gray-900 relative select-none box-border
 							${isPreview ? "opacity-25 bg-gray-300 dark:bg-gray-700" : ""}`}
-            style={{
-                position: "relative",
-                userSelect: "none",
-                order: position,
-                ...style
-            }}
+            style={{ height, ...style }}
             onMouseDown={(e) => {
                 e.stopPropagation();
-                onDragStart?.(user, position);
+                onDragStart?.(e, user, position);
             }}
         >
             <div
@@ -39,16 +43,10 @@ export const QueuePosition = ({
                     // Check left button down
                     if (e.buttons === 1) {
                         e.stopPropagation();
-                        onDragOver?.(position);
+                        onDragOver?.(e, position);
                     }
                 }}
-                style={{
-                    width: "100%",
-                    height: "50%",
-                    position: "absolute",
-                    top: 0,
-                    left: 0
-                }}
+                className="w-full h-1/2 absolute top-0 left-0"
             ></div>
             <div
                 // The area for the bottom half - drag over for before
@@ -56,37 +54,21 @@ export const QueuePosition = ({
                     // Check left button down
                     if (e.buttons === 1) {
                         e.stopPropagation();
-                        onDragOver?.(position + 1);
+                        onDragOver?.(e, position + 1);
                     }
                 }}
-                style={{
-                    width: "100%",
-                    height: "50%",
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0
-                }}
+                className="w-full h-1/2 absolute bottom-0 left-0"
             ></div>
             <div
-                className="w-10 h-10 rounded-full overflow-hidden border"
-                style={{ position: "relative" }}
+                className="rounded-full overflow-hidden border relative"
+                style={{ width: height / 1.5, height: height / 1.5 }}
             >
                 <div
-                    className="w-full h-full bg-cover bg-center"
-                    style={{
-                        backgroundImage: `url(${user.image})`,
-                        position: "absolute",
-                        zIndex: 2
-                    }}
+                    className="w-full h-full bg-cover bg-center absolute z-10"
+                    style={{ backgroundImage: `url(${user.image})` }}
                 ></div>
                 {/* TODO: Add some hashing fn to get a unique color by userId? */}
-                <div
-                    className="w-full h-full bg-cover bg-center flex items-center justify-center text-gray-500 font-bold"
-                    style={{
-                        position: "absolute",
-                        zIndex: 1
-                    }}
-                >
+                <div className="w-full h-full bg-cover bg-center flex items-center justify-center text-gray-500 font-bold absolute z-0">
                     {user.name.charAt(0) ?? "U"}
                 </div>
             </div>

@@ -17,6 +17,27 @@ type Drag =
           user: User;
       };
 
+export const mouseObject = {
+    isDown: false
+};
+
+document.addEventListener(
+    "mousedown",
+    (e) => {
+        mouseObject.isDown = true;
+    },
+    { capture: true }
+);
+document.addEventListener(
+    "mouseup",
+    (e) => {
+        mouseObject.isDown = false;
+    },
+    {
+        capture: true
+    }
+);
+
 class DragUserStore {
     listeners: Set<() => void> = new Set();
     onFinishDrag?: (
