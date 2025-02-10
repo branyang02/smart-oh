@@ -104,3 +104,19 @@ export const Default = () => {
         </div>
     );
 };
+
+export const LongQueue = () => {
+    return (
+        <div>
+            <DragPreview />
+
+            <DraggableQueue
+                width={300}
+                height={500}
+                queueId="1"
+                queueName="Test Queue 1"
+                users={lotsOfUsers}
+            />
+        </div>
+    );
+};
