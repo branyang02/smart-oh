@@ -26,7 +26,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const joinClassSchema = z.object({
-    classCode: z.string().min(1, "Class code is required")
+    classCode: z.string().min(1, "Class code is required"),
+    role: z.enum(["student", "TA"], {
+        required_error: "Please select a role"
+    })
 });
 
 const createClassSchema = z.object({
@@ -56,7 +59,8 @@ export function ClassForms({ user }: { user: User }) {
     const joinForm = useForm<z.infer<typeof joinClassSchema>>({
         resolver: zodResolver(joinClassSchema),
         defaultValues: {
-            classCode: ""
+            classCode: "",
+            role: "student"
         }
     });
 
@@ -74,7 +78,7 @@ export function ClassForms({ user }: { user: User }) {
             const res = await joinClassFromClassId(
                 user.id,
                 values.classCode,
-                "student"
+                values.role
             );
             toast({
                 title: "Success!",
@@ -140,7 +144,9 @@ export function ClassForms({ user }: { user: User }) {
         <div className="flex flex-col md:flex-row w-full max-w-4xl gap-8 mx-auto px-4">
             {/* Join Class Form */}
             <div className="w-full md:flex-1 md:max-w-md rounded-lg border p-3 shadow-sm">
-                <h2 className="text-2xl font-bold mb-6">Join Class</h2>
+                <h2 className="text-2xl font-bold mb-6">
+                    Join Class as Student/TA
+                </h2>
                 <Form {...joinForm}>
                     <form
                         onSubmit={joinForm.handleSubmit(onJoinSubmit)}
@@ -162,6 +168,34 @@ export function ClassForms({ user }: { user: User }) {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={joinForm.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Role</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select role" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="student">
+                                                Student
+                                            </SelectItem>
+                                            <SelectItem value="TA">
+                                                TA
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <div className="flex justify-end">
                             <Button type="submit">Join Class</Button>
                         </div>
@@ -171,7 +205,9 @@ export function ClassForms({ user }: { user: User }) {
 
             {/* Create Class Form */}
             <div className="w-full md:flex-1 md:max-w-md rounded-lg border p-3 shadow-sm">
-                <h2 className="text-2xl font-bold mb-6">Create Class</h2>
+                <h2 className="text-2xl font-bold mb-6">
+                    Create Class as Instructor
+                </h2>
                 <Form {...createForm}>
                     <form
                         onSubmit={createForm.handleSubmit(onCreateSubmit)}
