@@ -4,6 +4,7 @@ import { Class, Role, User } from "@/types";
 import { createContext, useContext } from "react";
 
 interface ClassContextType {
+    user: User;
     userClasses: (Class & {
         role: Role;
     })[];

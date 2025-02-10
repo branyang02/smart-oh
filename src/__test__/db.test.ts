@@ -163,18 +163,10 @@ describe("Database Setters", () => {
         ).rejects.toThrowError("does not exist");
         await expect(
             joinClassFromClassId("1", "5", "student")
-        ).resolves.toMatchObject({
-            userId: "1",
-            classId: "5",
-            role: "student"
-        });
+        ).resolves.toMatchObject(getClassFromClassId("5")!);
         await expect(
             joinClassFromClassId("2", "5", "student")
-        ).resolves.toMatchObject({
-            userId: "2",
-            classId: "5",
-            role: "student"
-        });
+        ).resolves.toMatchObject(getClassFromClassId("5")!);
         await expect(joinClassFromClassId("2", "5", "TA")).rejects.toThrowError(
             "already in class"
         );

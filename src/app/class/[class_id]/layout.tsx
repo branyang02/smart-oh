@@ -48,6 +48,7 @@ export default async function ClassLayout({
     return (
         <ClassProvider
             value={{
+                user,
                 userClasses,
                 courseTAs,
                 courseInstructors,

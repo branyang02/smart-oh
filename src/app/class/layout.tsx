@@ -17,7 +17,7 @@ export default async function BaseLayout({
     return (
         <EventsProvider>
             <SidebarProvider>
-                <ClassProvider value={{ userClasses }}>
+                <ClassProvider value={{ user, userClasses }}>
                     {children}
                 </ClassProvider>
             </SidebarProvider>

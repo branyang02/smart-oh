@@ -82,10 +82,9 @@ export function ClassForms({ user }: { user: User }) {
             );
             toast({
                 title: "Success!",
-                description: "You have joined the class.",
-                variant: "default"
+                description: `You have joined ${res.name}.`
             });
-            router.push(`/class/${res.classId}`);
+            router.push(`/class/${res.id}`);
         } catch (error) {
             joinForm.setError("classCode", {
                 type: "manual",
@@ -115,8 +114,7 @@ export function ClassForms({ user }: { user: User }) {
             );
             toast({
                 title: "Success!",
-                description: "Class created successfully.",
-                variant: "default"
+                description: `You have successfully created ${res.name}.`
             });
             router.push(`/class/${res.id}`);
         } catch (error) {

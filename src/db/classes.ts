@@ -69,7 +69,7 @@ export async function joinClassFromClassId(
     userId: string,
     classId: string,
     role: Role
-): Promise<UserClass> {
+): Promise<Class> {
     // assert user exists
     const user = await db.select().from(users).where(eq(users.id, userId));
     if (user.length === 0) {
@@ -103,5 +103,34 @@ export async function joinClassFromClassId(
         .insert(userClasses)
         .values({ userId, classId, role })
         .returning();
-    return result[0];
+    return aClass[0];
+}
+
+export async function leaveClass(userId: string, classId: string): Promise<void> {
+    // Check if user is in the class
+    const userClass = await db
+        .select()
+        .from(userClasses)
+        .where(
+            and(
+                eq(userClasses.userId, userId),
+                eq(userClasses.classId, classId)
+            )
+        );
+    if (userClass.length === 0) {
+        throw new Error(`User with id ${userId} is not in class with id ${classId}.`);
+    }
+    // Remove user from class
+    const result = await db
+        .delete(userClasses)
+        .where(
+            and(
+                eq(userClasses.userId, userId),
+                eq(userClasses.classId, classId)
+            )
+        )
+        .returning();
+    if (result.length === 0) {
+        throw new Error(`Failed to remove user ${userId} from class ${classId}`);
+    }
 }

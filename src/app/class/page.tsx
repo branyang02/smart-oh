@@ -1,7 +1,7 @@
-import { getCachedUserClassesFromUserId } from "@/cache";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
+import { getUserClassesFromUserId } from "@/db/classes";
 import { getUser } from "@/utils/user-utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ export default async function ClassPage() {
     const user = await getUser();
 
     const userClasses = await Promise.resolve(
-        getCachedUserClassesFromUserId(user.id)
+        getUserClassesFromUserId(user.id)
     );
     if (userClasses.length > 0) {
         const cookieStore = cookies();
