@@ -61,9 +61,13 @@ export default function Avatar({
 }) {
     if (user.image) {
         return (
-            <ShadAvatar status={status}>
+            <ShadAvatar status={status} className="border-2 border-background">
                 <AvatarImage src={user.image} alt={user.name} />
-                <AvatarFallback>
+                <AvatarFallback
+                    style={{
+                        backgroundColor: `${stringAvatar(user.name).color}`
+                    }}
+                >
                     {stringAvatar(user.name).initials}
                 </AvatarFallback>
             </ShadAvatar>

@@ -25,7 +25,7 @@ export function NavMain({ activeUserIds = [] }: { activeUserIds?: string[] }) {
         <>
             <SidebarGroup>
                 <SidebarGroupLabel>TAs</SidebarGroupLabel>
-                <SidebarMenu className="overflow-scroll max-h-[calc(50vh-4rem)]">
+                <SidebarMenu className="overflow-scroll max-h-[calc(50vh-4rem)] min-h-[20vh]">
                     {courseTAs?.map((ta) => (
                         <SidebarMenuItem key={ta.id} className="h-7">
                             <SidebarMenuButton

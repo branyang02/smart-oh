@@ -95,7 +95,7 @@ export async function joinClassFromClassId(
         );
     if (userClass.length > 0) {
         throw new Error(
-            `User with id ${userId} is already in class with id ${classId} as a ${userClass[0].role}.`
+            `You are already in class with id ${classId} as a ${userClass[0].role}.`
         );
     }
     // insert user into class
