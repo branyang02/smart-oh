@@ -4,9 +4,13 @@ import { AppHeader } from "@/components/app-header";
 import { KanbanBoard } from "@/components/queue/KanbanBoard";
 import { useClass } from "@/context/class-context";
 
+import OfficeHourRoom from "./office-hour-room";
+
 export default function ClassPage() {
-    const { activeClass } = useClass();
-    if (!activeClass) return null;
+    const { activeClass, activeRole, user } = useClass();
+    if (!activeClass || !activeRole) return null;
+    if (activeRole === "instructor")
+        throw new Error("Instructor view not implemented");
 
     return (
         <>
@@ -19,13 +23,12 @@ export default function ClassPage() {
                 ]}
             />
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <KanbanBoard />
-                {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                    <div className="aspect-video rounded-xl bg-muted/50" />
-                </div>
-                <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" /> */}
+                <OfficeHourRoom
+                    classId={activeClass.id}
+                    userId={user.id}
+                    userType={activeRole}
+                    name={user.name}
+                />
             </div>
         </>
     );

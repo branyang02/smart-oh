@@ -7,11 +7,9 @@ import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
 
-import { ColumnId } from "./KanbanBoard";
-
 export interface Task {
     id: UniqueIdentifier;
-    columnId: ColumnId;
+    columnId: string;
     content: string;
 }
 

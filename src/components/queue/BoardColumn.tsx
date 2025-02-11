@@ -19,16 +19,22 @@ export type ColumnType = "Column";
 
 export interface ColumnDragData {
     type: ColumnType;
-    column: Column;
+    column: Column & { draggable?: boolean };
 }
 
 interface BoardColumnProps {
     column: Column;
     tasks: Task[];
     isOverlay?: boolean;
+    draggable?: boolean;
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardColumn({
+    column,
+    tasks,
+    isOverlay,
+    draggable
+}: BoardColumnProps) {
     const tasksIds = useMemo(() => {
         return tasks.map((task) => task.id);
     }, [tasks]);
@@ -44,7 +50,10 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         id: column.id,
         data: {
             type: "Column",
-            column
+            column: {
+                ...column,
+                draggable
+            }
         } satisfies ColumnDragData,
         attributes: {
             roleDescription: `Column: ${column.title}`
@@ -57,7 +66,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     };
 
     const variants = cva(
-        "h-[500px] max-h-[500px] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
+        "bg-primary-foreground flex flex-col flex-shrink-0 min-h-[200px]",
         {
             variants: {
                 dragging: {
@@ -82,15 +91,17 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
             })}
         >
             <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
-                <Button
-                    variant={"ghost"}
-                    {...attributes}
-                    {...listeners}
-                    className=" p-1 text-primary/50 -ml-2 h-auto cursor-grab relative"
-                >
-                    <span className="sr-only">{`Move column: ${column.title}`}</span>
-                    <GripVertical />
-                </Button>
+                {draggable && (
+                    <Button
+                        variant={"ghost"}
+                        {...attributes}
+                        {...listeners}
+                        className=" p-1 text-primary/50 -ml-2 h-auto cursor-grab relative"
+                    >
+                        <span className="sr-only">{`Move column: ${column.title}`}</span>
+                        <GripVertical />
+                    </Button>
+                )}
                 <span className="ml-auto"> {column.title}</span>
             </CardHeader>
             <ScrollArea>
@@ -109,7 +120,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 export function BoardContainer({ children }: { children: React.ReactNode }) {
     const dndContext = useDndContext();
 
-    const variations = cva("px-2 md:px-0 flex lg:justify-center pb-4", {
+    const variations = cva("px-2 md:px-0 pb-4", {
         variants: {
             dragging: {
                 default: "snap-x snap-mandatory",
@@ -124,9 +135,8 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
                 dragging: dndContext.active ? "active" : "default"
             })}
         >
-            <div className="flex gap-4 items-center flex-row justify-center">
-                {children}
-            </div>
+            {/* <div className="flex gap-4 items-center flex-row justify-center"> */}
+            <div className="flex gap-4">{children}</div>
             <ScrollBar orientation="horizontal" />
         </ScrollArea>
     );
