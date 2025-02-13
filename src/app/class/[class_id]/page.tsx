@@ -1,10 +1,8 @@
 "use client";
 
 import { AppHeader } from "@/components/app-header";
-import { KanbanBoard } from "@/components/queue/KanbanBoard";
+import OfficeHourRoom from "@/components/office-hour-room";
 import { useClass } from "@/context/class-context";
-
-import OfficeHourRoom from "./office-hour-room";
 
 export default function ClassPage() {
     const { activeClass, activeRole, user } = useClass();

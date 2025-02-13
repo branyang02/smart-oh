@@ -50,62 +50,68 @@ const initTasks: Task[] = [
     {
         id: "student2",
         columnId: "queue",
-        content: "Student 2"
+        content: "Student 2",
+        type: "student"
     },
     {
         id: "student1",
         columnId: "queue",
-        content: "Student 1"
+        content: "Student 1",
+        type: "student"
     },
     {
         id: "student3",
         columnId: "queue",
-        content: "Student 3"
+        content: "Student 3",
+        type: "student"
     },
     {
         id: "student4",
         columnId: "queue",
-        content: "Student 4"
+        content: "Student 4",
+        type: "student"
     },
     {
         id: "student5",
         columnId: "queue",
-        content: "Student 5"
+        content: "Student 5",
+        type: "student"
     },
     {
         id: "ta1",
         columnId: "session1",
-        content: "TA 1"
+        content: "TA 1",
+        type: "TA"
     },
     {
         id: "ta2",
         columnId: "session2",
-        content: "TA 2"
+        content: "TA 2",
+        type: "TA"
     },
     {
         id: "ta5",
         columnId: "session1",
-        content: "TA 5"
+        content: "TA 5",
+        type: "TA"
     },
     {
         id: "ta3",
         columnId: "session3",
-        content: "TA 3"
+        content: "TA 3",
+        type: "TA"
     },
     {
         id: "ta4",
         columnId: "session4",
-        content: "TA 4"
+        content: "TA 4",
+        type: "TA"
     }
 ];
 
 export function KanbanBoard({
-    // initColumns,
-    // initTasks,
     sendMessage
 }: {
-    // initColumns: Column[];
-    // initTasks: Task[];
     sendMessage: (msg: { action: string; [key: string]: any }) => void;
 }) {
     const [columns, setColumns] = useState(initColumns);
@@ -120,10 +126,6 @@ export function KanbanBoard({
     const [tasks, setTasks] = useState<Task[]>(initTasks);
     const [activeColumn, setActiveColumn] = useState<Column | null>(null);
     const [activeTask, setActiveTask] = useState<Task | null>(null);
-    const [message, setMessage] = useState<{
-        action: string;
-        [key: string]: any;
-    } | null>(null);
 
     const sensors = useSensors(
         useSensor(MouseSensor),
@@ -377,8 +379,6 @@ export function KanbanBoard({
         const activeData = active.data.current;
 
         if (activeId === overId) {
-            if (message) console.log("Sending message", message);
-            // if (message) sendMessage(message);
             return;
         }
 
@@ -445,10 +445,6 @@ export function KanbanBoard({
                 const activeTask = tasks[activeIndex];
                 if (activeTask) {
                     activeTask.columnId = overId as string;
-                    setMessage({
-                        action: "assign_student_to_session",
-                        student_id: activeTask.id
-                    });
                     return arrayMove(tasks, activeIndex, activeIndex);
                 }
                 return tasks;

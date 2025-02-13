@@ -1,32 +1,24 @@
+import { WSUser } from "@/components/office-hour-room";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import type { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
 
-export interface Task {
-    id: UniqueIdentifier;
-    columnId: string;
-    content: string;
-    type: "student" | "TA";
+export interface UserDragData {
+    type: "user";
+    user: WSUser;
 }
 
-interface TaskCardProps {
-    task: Task;
+export function UserCard({
+    user,
+    isOverlay
+}: {
+    user: WSUser;
     isOverlay?: boolean;
-}
-
-export type TaskType = "Task";
-
-export interface TaskDragData {
-    type: TaskType;
-    task: Task;
-}
-
-export function TaskCard({ task, isOverlay }: TaskCardProps) {
+}) {
     const {
         setNodeRef,
         attributes,
@@ -35,13 +27,13 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         transition,
         isDragging
     } = useSortable({
-        id: task.id,
+        id: user.id,
         data: {
-            type: "Task",
-            task
-        } satisfies TaskDragData,
+            type: "user",
+            user: user
+        } satisfies UserDragData,
         attributes: {
-            roleDescription: "Task"
+            roleDescription: `This is a user with id: ${user.id}`
         }
     });
 
@@ -55,6 +47,10 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             dragging: {
                 over: "ring-2 opacity-30",
                 overlay: "ring-2 ring-primary"
+            },
+            userType: {
+                student: "",
+                TA: "border-green-500"
             }
         }
     });
@@ -68,7 +64,8 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
                     ? "overlay"
                     : isDragging
                       ? "over"
-                      : undefined
+                      : undefined,
+                userType: user.type === "TA" ? "TA" : "student"
             })}
         >
             <CardHeader className="px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative">
@@ -78,15 +75,18 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
                     {...listeners}
                     className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
                 >
-                    <span className="sr-only">Move task</span>
+                    <span className="sr-only">Move user</span>
                     <GripVertical />
                 </Button>
                 <Badge variant={"outline"} className="ml-auto font-semibold">
-                    Task
+                    {/* {user.type} */}
+                    {
+                        user.id //Temporary for display purposes
+                    }
                 </Badge>
             </CardHeader>
             <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-                {task.content}
+                {user.name}
             </CardContent>
         </Card>
     );

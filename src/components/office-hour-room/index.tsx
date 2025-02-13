@@ -1,30 +1,26 @@
-// OfficeHourRoom.tsx
-import RoomStateViewer from "@/components/queue/room-state-viewer";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
-interface Student {
+import RoomStateViewer from "./room-state-viewer";
+
+// Interfaces for WebSocket messages
+export interface WSUser {
     id: string;
     name: string;
+    type: string;
+    location?: string; // "queue" or "session-<session_id>"
 }
 
-interface TA {
+export interface WSSession {
     id: string;
-    name: string;
+    users: WSUser[]; // List of users in the session
 }
 
-interface Session {
-    session_id: string;
-    session_tas: string[];
-    session_students: string[];
-}
-
-interface RoomState {
+export interface WSRoomState {
     class_id: string;
-    students: Student[];
-    tas: TA[];
-    queue: Student[];
-    sessions: Session[];
+    all_users: WSUser[]; // List of all users in the room
+    queue: WSUser[]; // List of users in the queue
+    sessions: Map<string, WSSession>; // Map of session_id to session
 }
 
 const OfficeHourRoom = ({
@@ -39,7 +35,7 @@ const OfficeHourRoom = ({
     name: string;
 }) => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
-    const [roomState, setRoomState] = useState<RoomState | null>(null);
+    const [roomState, setRoomState] = useState<WSRoomState | null>(null);
 
     useEffect(() => {
         if (socket) return; // Prevent multiple connections
@@ -70,19 +66,12 @@ const OfficeHourRoom = ({
         socket?.send(JSON.stringify({ action: "leave_queue" }));
     }
     function createSession() {
-        socket?.send(JSON.stringify({ action: "join_session" }));
+        socket?.send(JSON.stringify({ action: "create_session" }));
     }
     function leaveSession() {
         socket?.send(JSON.stringify({ action: "leave_session" }));
     }
-    function assign_student_to_session(studentId: string) {
-        socket?.send(
-            JSON.stringify({
-                action: "assign_student_to_session",
-                student_id: studentId
-            })
-        );
-    }
+
     const sendWebSocketMessage = (message: {
         action: string;
         [key: string]: any;
@@ -97,7 +86,7 @@ const OfficeHourRoom = ({
         <>
             <h1>You are currently viewing as a {userType}</h1>
             <RoomStateViewer
-                roomState={roomState}
+                newRoomState={roomState!}
                 sendMessage={sendWebSocketMessage}
             />
             <div className="flex gap-4 mt-4">
@@ -107,21 +96,6 @@ const OfficeHourRoom = ({
                 </Button>
                 <Button onClick={createSession}>Create Session</Button>
                 <Button onClick={leaveSession}>Leave Session</Button>
-                {userType === "TA" && roomState && (
-                    <div className="flex flex-col gap-2">
-                        <h3>Assign Student to Session:</h3>
-                        {roomState.queue.map((student) => (
-                            <Button
-                                key={student.id}
-                                onClick={() =>
-                                    assign_student_to_session(student.id)
-                                }
-                            >
-                                Assign {student.name}
-                            </Button>
-                        ))}
-                    </div>
-                )}
             </div>
         </>
     );
