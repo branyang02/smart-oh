@@ -14,7 +14,7 @@ import {
     useSensors
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import React, { useRef, useState } from "react";
+import React, { act, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { BoardColumn } from "./board-column";
@@ -110,25 +110,21 @@ const rawRoomState = {
                     location: "session-2"
                 }
             ]
-        },
-        "session-3": {
-            id: "session-3",
-            users: []
         }
     }
 };
 
-const initRoomState: WSRoomState = {
-    class_id: rawRoomState.class_id,
-    all_users: rawRoomState.all_users,
-    queue: rawRoomState.queue,
-    sessions: new Map(
-        Object.entries(rawRoomState.sessions).map(([key, session]) => [
-            key,
-            session
-        ])
-    )
-};
+function processRoomState(state: WSRoomState): WSRoomState {
+    return {
+        ...state,
+        sessions: new Map(
+            Object.entries(state.sessions).map(([key, session]) => [
+                key,
+                session
+            ])
+        )
+    };
+}
 
 export default function RoomStateViewer({
     newRoomState,
@@ -138,12 +134,17 @@ export default function RoomStateViewer({
     sendMessage: (msg: { action: string; [key: string]: any }) => void;
 }) {
     if (!newRoomState) return <div>Loading room state...</div>;
+    const [roomState, setRoomState] = useState(() =>
+        processRoomState(newRoomState)
+    );
 
-    const [roomState, setRoomState] = useState(initRoomState);
-    const sessionids = roomState.sessions.keys();
+    useEffect(() => {
+        setRoomState(processRoomState(newRoomState));
+    }, [newRoomState]);
 
-    const pickedUpUserColumn = useRef<string | null>(null);
-    const [activeColumn, setActiveColumn] = useState<null>(null);
+    const sessionids = Object.keys(roomState.sessions);
+
+    const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
     const [activeUser, setActiveUser] = useState<WSUser | null>(null);
 
     const sensors = useSensors(
@@ -186,32 +187,30 @@ export default function RoomStateViewer({
         }
     }
     function onDragEnd(event: DragEndEvent) {
-        setActiveUser(null);
-
         const { active, over } = event;
         if (!over) return;
-
         const activeId = active.id;
         const overId = over.id;
-
+        const activeData = active.data.current;
+        const overData = over.data.current;
         console.log(`onDragEnd: ${activeId} -> ${overId}`);
+        console.log("Active Column: ", activeColumnId);
+        console.log(activeData?.user.location);
+
+        setActiveUser(null);
+        setActiveColumnId(null);
     }
 
     function onDragOver(event: DragOverEvent) {
         const { active, over } = event;
         if (!over) return;
-
         const activeId = active.id;
         const overId = over.id;
-
         if (activeId === overId) return;
         if (!hasDraggableData(active) || !hasDroppableData(over)) return;
-
         const activeData = active.data.current;
         const overData = over.data.current;
-
         if (!activeData || !overData) return;
-
         const isOverUser = overData?.type === "user";
         const isOverColumn = overData?.type === "column";
 
@@ -231,6 +230,7 @@ export default function RoomStateViewer({
                         const overIndex = prev.queue.findIndex(
                             (user) => user.id === overData.user.id
                         );
+                        setActiveColumnId("queue");
                         return {
                             ...prev,
                             queue: arrayMove(prev.queue, activeIndex, overIndex)
@@ -244,6 +244,7 @@ export default function RoomStateViewer({
                         const overIndex = session.users.findIndex(
                             (user) => user.id === overData.user.id
                         );
+                        setActiveColumnId(location);
                         return {
                             ...prev,
                             sessions: new Map(prev.sessions).set(location, {
@@ -265,12 +266,12 @@ export default function RoomStateViewer({
                     if (newLocation === "queue") {
                         // Move from session to queue
                         const prevLocation = activeData.user.location;
-                        const session = prev.sessions.get(prevLocation);
-                        if (!session) return prev;
+                        const prevSession = prev.sessions.get(prevLocation);
+                        if (!prevSession) return prev;
                         // Remove from session
                         const newSession = {
-                            ...session,
-                            users: session.users.filter(
+                            ...prevSession,
+                            users: prevSession.users.filter(
                                 (user) => user.id !== activeData.user.id
                             )
                         };
@@ -279,6 +280,7 @@ export default function RoomStateViewer({
                         const overIndex = prev.queue.findIndex(
                             (user) => user.id === overData.user.id
                         );
+                        setActiveColumnId("queue");
                         return {
                             ...prev,
                             queue: [
@@ -300,6 +302,7 @@ export default function RoomStateViewer({
                                 (user) => user.id === overData.user.id
                             );
                             activeData.user.location = newLocation;
+                            setActiveColumnId(newLocation);
                             return {
                                 ...prev,
                                 queue: prev.queue.filter(
@@ -341,6 +344,7 @@ export default function RoomStateViewer({
                             const overIndex = newSession.users.findIndex(
                                 (user) => user.id === overData.user.id
                             );
+                            setActiveColumnId(newLocation);
                             return {
                                 ...prev,
                                 sessions: new Map(prev.sessions)
@@ -379,6 +383,7 @@ export default function RoomStateViewer({
                         )
                     };
                     activeData.user.location = "queue";
+                    setActiveColumnId("queue");
                     return {
                         ...prev,
                         queue: [...prev.queue, activeData.user],
@@ -404,6 +409,7 @@ export default function RoomStateViewer({
                         activeData.user.location = overId as string;
                         const newSession = prev.sessions.get(overId as string);
                         if (!newSession) return prev;
+                        setActiveColumnId(overId as string);
                         return {
                             ...prev,
                             sessions: new Map(prev.sessions)
@@ -420,6 +426,7 @@ export default function RoomStateViewer({
                         activeData.user.location = overId as string;
                         const newSession = prev.sessions.get(overId as string);
                         if (!newSession) return prev;
+                        setActiveColumnId(overId as string);
                         return {
                             ...prev,
                             queue: prev.queue.filter(
