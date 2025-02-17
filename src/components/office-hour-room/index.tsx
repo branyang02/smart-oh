@@ -24,15 +24,15 @@ export interface WSRoomState {
 }
 
 const OfficeHourRoom = ({
-    classId,
-    userId,
-    userType,
-    name
+    currClassId,
+    currUserId,
+    currUserType,
+    currName
 }: {
-    classId: string;
-    userId: string;
-    userType: "student" | "TA";
-    name: string;
+    currClassId: string;
+    currUserId: string;
+    currUserType: "student" | "TA";
+    currName: string;
 }) => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const [roomState, setRoomState] = useState<WSRoomState | null>(null);
@@ -41,7 +41,7 @@ const OfficeHourRoom = ({
         if (socket) return; // Prevent multiple connections
         console.log("Connecting to WebSocket");
         const ws = new WebSocket(
-            `ws://localhost:8000/ws/${classId}/${userId}?user_type=${userType}&name=${name}`
+            `ws://localhost:8000/ws/${currClassId}/${currUserId}?user_type=${currUserType}&name=${currName}`
         );
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -57,7 +57,7 @@ const OfficeHourRoom = ({
                 ws.close();
             }
         };
-    }, [classId, userId, userType, name]);
+    }, [currClassId, currUserId, currUserType, currName]);
 
     function joinQueue() {
         socket?.send(JSON.stringify({ action: "join_queue" }));
@@ -84,8 +84,10 @@ const OfficeHourRoom = ({
 
     return (
         <>
-            <h1>You are currently viewing as a {userType}</h1>
+            <h1>You are currently viewing as a {currUserType}</h1>
             <RoomStateViewer
+                currUserId={currUserId}
+                currUserType={currUserType}
                 newRoomState={roomState!}
                 sendMessage={sendWebSocketMessage}
             />

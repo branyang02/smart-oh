@@ -22,10 +22,10 @@ export default function ClassPage() {
             />
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <OfficeHourRoom
-                    classId={activeClass.id}
-                    userId={user.id}
-                    userType={activeRole}
-                    name={user.name}
+                    currClassId={activeClass.id}
+                    currUserId={user.id}
+                    currUserType={activeRole}
+                    currName={user.name}
                 />
             </div>
         </>

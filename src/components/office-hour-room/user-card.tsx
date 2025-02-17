@@ -13,9 +13,13 @@ export interface UserDragData {
 }
 
 export function UserCard({
+    currUserId,
+    currUserType,
     user,
     isOverlay
 }: {
+    currUserId: string;
+    currUserType: "student" | "TA";
     user: WSUser;
     isOverlay?: boolean;
 }) {
@@ -69,15 +73,18 @@ export function UserCard({
             })}
         >
             <CardHeader className="px-3 py-3 space-between flex flex-row border-b-2 border-secondary relative">
-                <Button
-                    variant={"ghost"}
-                    {...attributes}
-                    {...listeners}
-                    className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
-                >
-                    <span className="sr-only">Move user</span>
-                    <GripVertical />
-                </Button>
+                {currUserType === "TA" &&
+                    (currUserId === user.id || user.type === "student") && (
+                        <Button
+                            variant={"ghost"}
+                            {...attributes}
+                            {...listeners}
+                            className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
+                        >
+                            <span className="sr-only">Move user</span>
+                            <GripVertical />
+                        </Button>
+                    )}
                 <Badge variant={"outline"} className="ml-auto font-semibold">
                     {/* {user.type} */}
                     {

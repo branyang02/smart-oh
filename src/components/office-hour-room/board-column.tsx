@@ -13,10 +13,14 @@ export interface ColumnDropData {
 }
 
 export function BoardColumn({
+    currUserId,
+    currUserType,
     column,
     users,
     isOverlay
 }: {
+    currUserId: string;
+    currUserType: "student" | "TA";
     column: WSColumn;
     users: WSUser[];
     isOverlay?: boolean;
@@ -78,7 +82,12 @@ export function BoardColumn({
                 <CardContent className="flex flex-grow flex-col gap-2 p-2">
                     <SortableContext items={userIds}>
                         {users.map((user) => (
-                            <UserCard key={user.id} user={user} />
+                            <UserCard
+                                currUserId={currUserId}
+                                currUserType={currUserType}
+                                key={user.id}
+                                user={user}
+                            />
                         ))}
                     </SortableContext>
                 </CardContent>

@@ -146,22 +146,30 @@ const rawRoomState: WSRoomState = {
 };
 
 export default function RoomStateViewer({
+    currUserId,
+    currUserType,
     newRoomState,
     sendMessage
 }: {
+    currUserId: string;
+    currUserType: "student" | "TA";
     newRoomState: WSRoomState;
     sendMessage: (msg: { action: string; [key: string]: any }) => void;
 }) {
     if (!newRoomState) return <div>Loading room state...</div>;
-    const [roomState, setRoomState] = useState(() => rawRoomState);
+    const [roomState, setRoomState] = useState(newRoomState);
 
-    // useEffect(() => {
-    //     setRoomState(newRoomState);
-    // }, [newRoomState]);
+    useEffect(() => {
+        setRoomState(newRoomState);
+    }, [newRoomState]);
 
     const columnIds = roomState.columns.map((column) => column.id);
     const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
     const [activeUser, setActiveUser] = useState<WSUser | null>(null);
+    const [message, setMessage] = useState<{
+        action: string;
+        [key: string]: any;
+    } | null>(null);
 
     const sensors = useSensors(
         useSensor(MouseSensor),
@@ -195,7 +203,8 @@ export default function RoomStateViewer({
     };
 
     function onDragStart(event: DragStartEvent) {
-        if (!hasDraggableData(event.active)) return;
+        const { active } = event;
+        if (!hasDraggableData(active)) return;
         const data = event.active.data.current;
         if (data?.type === "user") {
             setActiveUser(data.user);
@@ -205,11 +214,16 @@ export default function RoomStateViewer({
     function onDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         if (!over) return;
-        if (!hasDraggableData(event.active)) return;
+        if (!hasDraggableData(active) || !hasDroppableData(over)) return;
 
         const activeId = active.id;
         const overId = over.id;
 
+        if (message) {
+            console.log(message);
+            sendMessage(message!);
+            setMessage(null);
+        }
         setActiveUser(null);
         setActiveColumnId(null);
     }
@@ -217,15 +231,121 @@ export default function RoomStateViewer({
     function onDragOver(event: DragOverEvent) {
         const { active, over } = event;
         if (!over) return;
+
         const activeId = active.id;
         const overId = over.id;
+
         if (activeId === overId) return;
+
         if (!hasDraggableData(active) || !hasDroppableData(over)) return;
+
         const activeData = active.data.current;
         const overData = over.data.current;
-        if (!activeData || !overData) return;
+
         const isOverUser = overData?.type === "user";
         const isOverColumn = overData?.type === "column";
+
+        if (isOverUser) {
+            setRoomState((roomState) => {
+                const activeIndex = roomState.users.findIndex(
+                    (user) => user.id === activeId
+                );
+                const overIndex = roomState.users.findIndex(
+                    (user) => user.id === overId
+                );
+                const activeUser = roomState.users[activeIndex];
+                const overUser = roomState.users[overIndex];
+                if (activeUser.type === "TA" && overUser.columnId === "queue")
+                    return roomState;
+
+                if (activeUser.columnId !== overUser.columnId) {
+                    activeUser.columnId = overUser.columnId;
+                }
+                const currSessionUsers = roomState.users.filter(
+                    (user) => user.columnId === overUser.columnId
+                );
+                let localIndex = currSessionUsers.findIndex(
+                    (user) => user.id === overUser.id
+                );
+
+                if (activeUser.type === "TA") {
+                    setMessage({
+                        action: "join_session",
+                        session_id: overUser.columnId,
+                        index: localIndex
+                    });
+                }
+                if (
+                    activeUser.type === "student" &&
+                    overUser.columnId !== "queue"
+                ) {
+                    setMessage({
+                        action: "assign_student_to_session",
+                        student_id: activeUser.id,
+                        session_id: overUser.columnId,
+                        index: localIndex
+                    });
+                }
+                if (
+                    activeUser.type === "student" &&
+                    overUser.columnId === "queue"
+                ) {
+                    setMessage({
+                        action: "assign_student_to_queue",
+                        student_id: activeUser.id,
+                        index: localIndex
+                    });
+                }
+
+                if (activeUser.columnId !== overUser.columnId) {
+                    return {
+                        ...roomState,
+                        users: arrayMove(
+                            roomState.users,
+                            activeIndex,
+                            overIndex - 1
+                        )
+                    };
+                }
+                return {
+                    ...roomState,
+                    users: arrayMove(roomState.users, activeIndex, overIndex)
+                };
+            });
+        }
+
+        if (isOverColumn) {
+            setRoomState((roomState) => {
+                const activeIndex = roomState.users.findIndex(
+                    (u) => u.id === activeId
+                );
+                const activeUser = roomState.users[activeIndex];
+                if (activeUser.type === "TA" && overId === "queue")
+                    return roomState;
+
+                if (activeUser.type === "student" && overId !== "queue") {
+                    setMessage({
+                        action: "assign_student_to_session",
+                        student_id: activeUser.id,
+                        session_id: overId as string,
+                        index: activeIndex
+                    });
+                }
+                if (activeUser.type === "student" && overId === "queue") {
+                    setMessage({
+                        action: "assign_student_to_queue",
+                        student_id: activeUser.id,
+                        index: activeIndex
+                    });
+                }
+                // Drag User to new column
+                activeUser.columnId = overId as string;
+                return {
+                    ...roomState,
+                    users: arrayMove(roomState.users, activeIndex, activeIndex)
+                };
+            });
+        }
     }
 
     return (
@@ -248,6 +368,8 @@ export default function RoomStateViewer({
                     >
                         <div>
                             <BoardColumn
+                                currUserId={currUserId}
+                                currUserType={currUserType}
                                 column={
                                     roomState.columns.find(
                                         (col) => col.id === "queue"
@@ -271,6 +393,8 @@ export default function RoomStateViewer({
                                     return (
                                         <BoardColumn
                                             key={column.id}
+                                            currUserId={currUserId}
+                                            currUserType={currUserType}
                                             column={column}
                                             users={roomState.users.filter(
                                                 (user) =>
@@ -287,7 +411,14 @@ export default function RoomStateViewer({
             {"document" in window &&
                 createPortal(
                     <DragOverlay>
-                        {activeUser && <UserCard user={activeUser} isOverlay />}
+                        {activeUser && (
+                            <UserCard
+                                currUserId={currUserId}
+                                currUserType={currUserType}
+                                user={activeUser}
+                                isOverlay
+                            />
+                        )}
                     </DragOverlay>,
                     document.body
                 )}
