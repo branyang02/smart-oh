@@ -1,4 +1,4 @@
-import { WSRoomState, WSSession, WSUser } from "@/components/office-hour-room";
+import { WSColumn, WSRoomState, WSUser } from "@/components/office-hour-room";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
@@ -7,30 +7,21 @@ import { cva } from "class-variance-authority";
 
 import { UserCard } from "./user-card";
 
-export interface ColumnDragData {
+export interface ColumnDropData {
     type: "column";
-    data: WSUser[];
+    column: WSColumn;
 }
 
 export function BoardColumn({
-    session,
-    queue,
+    column,
+    users,
     isOverlay
 }: {
-    session?: WSSession;
-    queue?: WSUser[];
+    column: WSColumn;
+    users: WSUser[];
     isOverlay?: boolean;
 }) {
-    if (session && queue) {
-        throw new Error("Only one of 'session' or 'queue' should be provided.");
-    }
-    if (!session && !queue) {
-        throw new Error("Either 'session' or 'queue' must be provided.");
-    }
-
-    let userIds: string[] = [];
-    if (session) userIds = session.users.map((user) => user.id);
-    if (queue) userIds = queue.map((student) => student.id);
+    const userIds = users.map((user) => user.id);
 
     const {
         setNodeRef,
@@ -40,13 +31,13 @@ export function BoardColumn({
         transition,
         isDragging
     } = useSortable({
-        id: session ? session.id : "queue",
+        id: column.id,
         data: {
             type: "column",
-            data: session ? session.users : queue!
-        } satisfies ColumnDragData,
+            column: column
+        } satisfies ColumnDropData,
         attributes: {
-            roleDescription: `This is Session with id: ${session ? session.id : "queue"}`
+            roleDescription: `This is column with id: ${column.id}`
         }
     });
     const style = {
@@ -80,19 +71,15 @@ export function BoardColumn({
         >
             <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
                 <span className="ml-auto">
-                    {session ? "Session " + session.id : "Queue"}
+                    {column.title} ({users.length})
                 </span>
             </CardHeader>
             <ScrollArea>
                 <CardContent className="flex flex-grow flex-col gap-2 p-2">
                     <SortableContext items={userIds}>
-                        {session
-                            ? session.users.map((user) => (
-                                  <UserCard key={user.id} user={user} />
-                              ))
-                            : queue?.map((user) => (
-                                  <UserCard key={user.id} user={user} />
-                              ))}
+                        {users.map((user) => (
+                            <UserCard key={user.id} user={user} />
+                        ))}
                     </SortableContext>
                 </CardContent>
             </ScrollArea>

@@ -5,22 +5,22 @@ import RoomStateViewer from "./room-state-viewer";
 
 // Interfaces for WebSocket messages
 export interface WSUser {
-    id: string;
+    id: string; // User ID
+    columnId: string; // "queue" | "session-ID" | "none"
     name: string;
-    type: string;
-    location?: string; // "queue" or "session-<session_id>"
+    type: string; // "student" | "TA"
 }
 
-export interface WSSession {
-    id: string;
-    users: WSUser[]; // List of users in the session
+export interface WSColumn {
+    id: string; // "queue" | "session-ID"
+    title: string;
 }
 
 export interface WSRoomState {
-    class_id: string;
-    all_users: WSUser[]; // List of all users in the room
-    queue: WSUser[]; // List of users in the queue
-    sessions: Map<string, WSSession>; // Map of session_id to session
+    classId: string;
+    allUsers: WSUser[]; // List of all users in the room
+    users: WSUser[]; // List of active users in the room (in queue or session)
+    columns: WSColumn[]; // List of columns in the room
 }
 
 const OfficeHourRoom = ({

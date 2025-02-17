@@ -1,6 +1,6 @@
 import { Active, DataRef, Over } from "@dnd-kit/core";
 import { UserDragData } from "./user-card";
-import { ColumnDragData } from "./board-column";
+import { ColumnDropData } from "./board-column";
 
 export function hasDraggableData<T extends Active | Over>(
     entry: T | null | undefined
@@ -18,7 +18,7 @@ export function hasDraggableData<T extends Active | Over>(
 export function hasDroppableData<T extends Over>(
     entry: T | null | undefined
 ): entry is T & {
-    data: DataRef<UserDragData | ColumnDragData>;
+    data: DataRef<UserDragData | ColumnDropData>;
 } {
     if (!entry) {
         return false;
