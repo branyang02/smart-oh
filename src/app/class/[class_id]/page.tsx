@@ -1,7 +1,7 @@
 "use client";
 
 import { AppHeader } from "@/components/app-header";
-import OfficeHourRoom from "@/components/office-hour-room";
+import OfficeHourRoom from "@/components/queue";
 import { useClass } from "@/context/class-context";
 
 export default function ClassPage() {
@@ -23,9 +23,8 @@ export default function ClassPage() {
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                 <OfficeHourRoom
                     currClassId={activeClass.id}
-                    currUserId={user.id}
+                    currUser={user}
                     currUserType={activeRole}
-                    currName={user.name}
                 />
             </div>
         </>
