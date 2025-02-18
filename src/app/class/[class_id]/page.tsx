@@ -1,7 +1,7 @@
 "use client";
 
 import { AppHeader } from "@/components/app-header";
-import OfficeHourRoom from "@/components/queue";
+import OfficeHourRoom from "@/components/office-hour-room";
 import { useClass } from "@/context/class-context";
 
 export default function ClassPage() {
