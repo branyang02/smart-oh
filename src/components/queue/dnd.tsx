@@ -1,75 +1,234 @@
 import { Board } from "@/components/queue/board";
 import { TBoard } from "@/components/queue/data";
+import { Button } from "@/components/ui/button";
+import { useClass } from "@/context/class-context";
 
-import { Button } from "../ui/button";
-import { useCurrUser } from "./user-context";
+// type User = {
+//     id: string;
+//     name: string;
+//     email: string;
+//     emailVerified: Date | null;
+//     image: string | null;
+// };
 
 const DummyRoomState: TBoard = {
     classId: "class1",
     allUsers: [
-        { id: "student1", name: "Alice Student", type: "student" },
-        { id: "student2", name: "Bob Student", type: "student" },
-        { id: "student3", name: "Charlie Student", type: "student" },
-        { id: "student4", name: "David Student", type: "student" },
-        { id: "student5", name: "Eve Student", type: "student" },
-        { id: "student6", name: "Frank Student", type: "student" },
-        { id: "student7", name: "Grace Student", type: "student" },
-        { id: "student8", name: "Hank Student", type: "student" },
-        { id: "student9", name: "Ivy Student", type: "student" },
-        { id: "ta1", name: "John TA", type: "TA" },
-        { id: "ta2", name: "Jane TA", type: "TA" },
-        { id: "ta3", name: "Kate TA", type: "TA" }
+        {
+            user: {
+                id: "student1",
+                name: "Alice Student",
+                email: "alice@example.com",
+                emailVerified: null,
+                image: null
+            },
+            role: "student"
+        },
+        {
+            user: {
+                id: "student2",
+                name: "Bob Learner",
+                email: "bob@example.com",
+                emailVerified: null,
+                image: "https://example.com/bob.jpg"
+            },
+            role: "student"
+        },
+        {
+            user: {
+                id: "ta1",
+                name: "Charlie Assistant",
+                email: "charlie@example.com",
+                emailVerified: null,
+                image: "https://example.com/charlie.jpg"
+            },
+            role: "TA"
+        },
+        {
+            user: {
+                id: "student3",
+                name: "David Scholar",
+                email: "david@example.com",
+                emailVerified: null,
+                image: null
+            },
+            role: "student"
+        },
+        {
+            user: {
+                id: "ta2",
+                name: "Eve Mentor",
+                email: "eve@example.com",
+                emailVerified: null,
+                image: "https://example.com/eve.jpg"
+            },
+            role: "TA"
+        },
+        {
+            user: {
+                id: "student4",
+                name: "Frank Learner",
+                email: "frank@example.com",
+                emailVerified: null,
+                image: null
+            },
+            role: "student"
+        },
+        {
+            user: {
+                id: "ta3",
+                name: "Grace Tutor",
+                email: "grace@example.com",
+                emailVerified: null,
+                image: "https://example.com/grace.jpg"
+            },
+            role: "TA"
+        },
+        {
+            user: {
+                id: "student5",
+                name: "Hannah Student",
+                email: "hannah@example.com",
+                emailVerified: null,
+                image: null
+            },
+            role: "student"
+        },
+        {
+            user: {
+                id: "ta4",
+                name: "Isaac Assistant",
+                email: "isaac@example.com",
+                emailVerified: null,
+                image: "https://example.com/isaac.jpg"
+            },
+            role: "TA"
+        },
+        {
+            user: {
+                id: "student6",
+                name: "Jack Learner",
+                email: "jack@example.com",
+                emailVerified: null,
+                image: null
+            },
+            role: "student"
+        }
     ],
     columns: [
         {
             id: "queue",
             title: "Queue",
             cards: [
-                { id: "student5", name: "Eve Student", type: "student" },
-                { id: "student6", name: "Frank Student", type: "student" },
-                { id: "student7", name: "Grace Student", type: "student" },
-                { id: "student8", name: "Hank Student", type: "student" },
-                { id: "student9", name: "Ivy Student", type: "student" },
-                { id: "student10", name: "Jack Student", type: "student" },
-                { id: "student11", name: "Kelly Student", type: "student" },
-                { id: "student12", name: "Liam Student", type: "student" },
-                { id: "student13", name: "Mia Student", type: "student" },
-                { id: "student14", name: "Nick Student", type: "student" },
-                { id: "student15", name: "Olivia Student", type: "student" },
-                { id: "student16", name: "Peter Student", type: "student" },
-                { id: "student17", name: "Quinn Student", type: "student" },
-                { id: "student18", name: "Rose Student", type: "student" },
-                { id: "student19", name: "Sam Student", type: "student" },
-                { id: "student20", name: "Tom Student", type: "student" },
-                { id: "student21", name: "Uma Student", type: "student" },
-                { id: "student22", name: "Vince Student", type: "student" },
-                { id: "student23", name: "Wendy Student", type: "student" },
-                { id: "student24", name: "Xander Student", type: "student" },
-                { id: "student25", name: "Yara Student", type: "student" },
-                { id: "student26", name: "Zane Student", type: "student" }
+                {
+                    user: {
+                        id: "student1",
+                        name: "Alice Student",
+                        email: "alice@example.com",
+                        emailVerified: null,
+                        image: null
+                    },
+                    role: "student"
+                },
+                {
+                    user: {
+                        id: "student2",
+                        name: "Bob Learner",
+                        email: "bob@example.com",
+                        emailVerified: null,
+                        image: "https://example.com/bob.jpg"
+                    },
+                    role: "student"
+                },
+                {
+                    user: {
+                        id: "student3",
+                        name: "David Scholar",
+                        email: "david@example.com",
+                        emailVerified: null,
+                        image: null
+                    },
+                    role: "student"
+                },
+                {
+                    user: {
+                        id: "student4",
+                        name: "Frank Learner",
+                        email: "frank@example.com",
+                        emailVerified: null,
+                        image: null
+                    },
+                    role: "student"
+                },
+                {
+                    user: {
+                        id: "student5",
+                        name: "Hannah Student",
+                        email: "hannah@example.com",
+                        emailVerified: null,
+                        image: null
+                    },
+                    role: "student"
+                }
             ]
         },
         {
             id: "session-1",
             title: "session-1",
             cards: [
-                { id: "ta1", name: "John TA", type: "TA" },
-                { id: "student1", name: "Alice Student", type: "student" },
-                { id: "student4", name: "David Student", type: "student" }
+                {
+                    user: {
+                        id: "ta4",
+                        name: "Isaac Assistant",
+                        email: "isaac@example.com",
+                        emailVerified: null,
+                        image: "https://example.com/isaac.jpg"
+                    },
+                    role: "TA"
+                },
+                {
+                    user: {
+                        id: "student6",
+                        name: "Jack Learner",
+                        email: "jack@example.com",
+                        emailVerified: null,
+                        image: null
+                    },
+                    role: "student"
+                }
             ]
         },
         {
             id: "session-2",
             title: "session-2",
             cards: [
-                { id: "ta2", name: "Jane TA", type: "TA" },
-                { id: "student3", name: "Charlie Student", type: "student" }
+                {
+                    user: {
+                        id: "ta3",
+                        name: "Grace Tutor",
+                        email: "grace@example.com",
+                        emailVerified: null,
+                        image: "https://example.com/grace.jpg"
+                    },
+                    role: "TA"
+                }
             ]
         },
         {
             id: "session-3",
             title: "session-3",
-            cards: [{ id: "ta3", name: "Kate TA", type: "TA" }]
+            cards: [
+                {
+                    user: {
+                        id: "ta2",
+                        name: "Eve Mentor",
+                        email: "eve@example.com",
+                        emailVerified: null,
+                        image: "https://example.com/eve.jpg"
+                    },
+                    role: "TA"
+                }
+            ]
         },
         {
             id: "session-4",
@@ -79,7 +238,18 @@ const DummyRoomState: TBoard = {
         {
             id: "session-5",
             title: "session-5",
-            cards: []
+            cards: [
+                {
+                    user: {
+                        id: "ta1",
+                        name: "Charlie Assistant",
+                        email: "charlie@example.com",
+                        emailVerified: null,
+                        image: "https://example.com/charlie.jpg"
+                    },
+                    role: "TA"
+                }
+            ]
         },
         {
             id: "session-6",
@@ -89,26 +259,6 @@ const DummyRoomState: TBoard = {
         {
             id: "session-7",
             title: "session-7",
-            cards: []
-        },
-        {
-            id: "session-8",
-            title: "session-8",
-            cards: []
-        },
-        {
-            id: "session-9",
-            title: "session-9",
-            cards: []
-        },
-        {
-            id: "session-10",
-            title: "session-10",
-            cards: []
-        },
-        {
-            id: "session-11",
-            title: "session-11",
             cards: []
         }
     ]
@@ -121,7 +271,7 @@ export default function DnD({
     newRoomState: TBoard;
     handleRoomStateChange: (newRoomState: TBoard) => void;
 }) {
-    const { currUser, currUserType } = useCurrUser();
+    const { activeRole, user } = useClass();
 
     return (
         <div>
@@ -132,7 +282,7 @@ export default function DnD({
             >
                 Use Dummy Data
             </Button>
-            {currUserType === "student" && (
+            {activeRole === "student" && (
                 <>
                     <Button
                         onClick={() => {
@@ -145,9 +295,8 @@ export default function DnD({
                                               cards: [
                                                   ...column.cards,
                                                   {
-                                                      id: currUser.id,
-                                                      name: currUser.name,
-                                                      type: currUserType
+                                                      user: user,
+                                                      role: activeRole
                                                   }
                                               ]
                                           }
@@ -168,7 +317,7 @@ export default function DnD({
                                               ...column,
                                               cards: column.cards.filter(
                                                   (card) =>
-                                                      card.id !== currUser.id
+                                                      card.user.id !== user.id
                                               )
                                           }
                                         : column
@@ -180,7 +329,7 @@ export default function DnD({
                     </Button>
                 </>
             )}
-            {currUserType === "TA" && (
+            {activeRole === "TA" && (
                 <>
                     <Button
                         onClick={() => {
@@ -193,9 +342,8 @@ export default function DnD({
                                               cards: [
                                                   ...column.cards,
                                                   {
-                                                      id: currUser.id,
-                                                      name: currUser.name,
-                                                      type: currUserType
+                                                      user: user,
+                                                      role: activeRole
                                                   }
                                               ]
                                           }
@@ -216,7 +364,7 @@ export default function DnD({
                                               ...column,
                                               cards: column.cards.filter(
                                                   (card) =>
-                                                      card.id !== currUser.id
+                                                      card.user.id !== user.id
                                               )
                                           }
                                         : column

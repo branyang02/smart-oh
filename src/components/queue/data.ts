@@ -1,7 +1,8 @@
+import { User } from "@/types";
+
 export type TCard = {
-  id: string;
-  name: string;
-  type: "student" | "TA";
+  user: User;
+  role: "student" | "TA";
 };
 
 export type TColumn = {

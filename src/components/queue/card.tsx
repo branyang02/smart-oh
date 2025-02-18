@@ -1,6 +1,7 @@
 "use client";
 
 import { isSafari } from "@/components/queue/is-safari";
+import { useClass } from "@/context/class-context";
 import {
     type Edge,
     attachClosestEdge,
@@ -28,7 +29,6 @@ import {
     isDraggingACard
 } from "./data";
 import { isShallowEqual } from "./is-shallow-equal";
-import { useCurrUser } from "./user-context";
 
 type TCardState =
     | {
@@ -90,7 +90,7 @@ export function CardDisplay({
     outerRef?: React.MutableRefObject<HTMLDivElement | null>;
     innerRef?: MutableRefObject<HTMLDivElement | null>;
 }) {
-    const { currUserType, currUser } = useCurrUser();
+    const { activeClass, activeRole, user } = useClass();
 
     return (
         <div
@@ -103,7 +103,7 @@ export function CardDisplay({
             ) : null}
 
             <div
-                className={`rounded p-2 ${card.type === "TA" ? "border-green-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
+                className={`rounded p-2 ${card.role === "TA" ? "border-green-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
                 ref={innerRef}
                 style={
                     state.type === "preview"
@@ -118,31 +118,23 @@ export function CardDisplay({
                 }
             >
                 <div className="flex items-center gap-2">
-                    {(draggable || currUserType === "TA") && (
+                    {(draggable || activeRole === "TA") && (
                         <Button
                             variant={"ghost"}
                             className="p-1 text-secondary-foreground/50 h-auto cursor-grab"
                         >
                             <span className="sr-only">Move user</span>
-                            {currUser.id === card.id ? (
+                            {user.id === card.user.id ? (
                                 <UserIcon />
-                            ) : card.type === "student" ? (
+                            ) : card.role === "student" ? (
                                 <GripVertical />
                             ) : (
                                 <LockKeyhole />
                             )}
                         </Button>
                     )}
-                    <Avatar
-                        user={{
-                            id: card.id,
-                            name: card.name,
-                            email: "example@example.com",
-                            emailVerified: null,
-                            image: "https://example.com/image.jpg"
-                        }}
-                    />
-                    <div>{card.name}</div>
+                    <Avatar user={card.user} />
+                    <div>{card.user.name}</div>
                 </div>
             </div>
             {/* Put a shadow after the item if closer to the bottom edge */}
@@ -154,15 +146,15 @@ export function CardDisplay({
 }
 
 export function Card({ card, columnId }: { card: TCard; columnId: string }) {
-    const { currUserType, currUser } = useCurrUser();
+    const { activeClass, activeRole, user } = useClass();
 
     const outerRef = useRef<HTMLDivElement | null>(null);
     const innerRef = useRef<HTMLDivElement | null>(null);
     const [state, setState] = useState<TCardState>(idle);
 
     const isDraggable =
-        currUserType === "TA" &&
-        (currUser.id === card.id || card.type === "student");
+        activeRole === "TA" &&
+        (user.id === card.user.id || card.role === "student");
 
     useEffect(() => {
         const outer = outerRef.current;
@@ -228,7 +220,7 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
                     if (!isCardData(source.data)) {
                         return;
                     }
-                    if (source.data.card.id === card.id) {
+                    if (source.data.card.user.id === card.user.id) {
                         return;
                     }
                     const closestEdge = extractClosestEdge(self.data);
@@ -246,7 +238,7 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
                     if (!isCardData(source.data)) {
                         return;
                     }
-                    if (source.data.card.id === card.id) {
+                    if (source.data.card.user.id === card.user.id) {
                         return;
                     }
                     const closestEdge = extractClosestEdge(self.data);
@@ -270,7 +262,7 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
                     if (!isCardData(source.data)) {
                         return;
                     }
-                    if (source.data.card.id === card.id) {
+                    if (source.data.card.user.id === card.user.id) {
                         setState({ type: "is-dragging-and-left-self" });
                         return;
                     }

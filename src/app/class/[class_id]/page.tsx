@@ -5,7 +5,7 @@ import OfficeHourRoom from "@/components/queue";
 import { useClass } from "@/context/class-context";
 
 export default function ClassPage() {
-    const { activeClass, activeRole, user } = useClass();
+    const { activeClass, activeRole } = useClass();
     if (!activeClass || !activeRole) return null;
     if (activeRole === "instructor")
         throw new Error("Instructor view not implemented");
@@ -21,11 +21,7 @@ export default function ClassPage() {
                 ]}
             />
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <OfficeHourRoom
-                    currClassId={activeClass.id}
-                    currUser={user}
-                    currUserType={activeRole}
-                />
+                <OfficeHourRoom currClassId={activeClass.id} />
             </div>
         </>
     );

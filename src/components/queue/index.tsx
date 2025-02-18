@@ -1,20 +1,12 @@
+import { useClass } from "@/context/class-context";
 import { User } from "@/types";
 import { useEffect, useRef, useState } from "react";
 
 import DnD from "../queue/dnd";
 import { TBoard } from "./data";
 import { SettingsContextProvider } from "./settings-context";
-import { CurrUserProvider } from "./user-context";
 
-const OfficeHourRoom = ({
-    currClassId,
-    currUserType,
-    currUser
-}: {
-    currClassId: string;
-    currUserType: "student" | "TA";
-    currUser: User;
-}) => {
+const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
     const wsRef = useRef<WebSocket | null>(null);
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
@@ -67,12 +59,10 @@ const OfficeHourRoom = ({
 
     return (
         <SettingsContextProvider>
-            <CurrUserProvider value={{ currUser, currUserType }}>
-                <DnD
-                    newRoomState={roomState!}
-                    handleRoomStateChange={handleRoomStateChange}
-                />
-            </CurrUserProvider>
+            <DnD
+                newRoomState={roomState!}
+                handleRoomStateChange={handleRoomStateChange}
+            />
         </SettingsContextProvider>
     );
 };
