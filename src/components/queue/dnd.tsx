@@ -1,9 +1,7 @@
 import { Board } from "@/components/queue/board";
-import { TBoard, TCard, TColumn } from "@/components/queue/data";
-import { useEffect } from "react";
+import { TBoard } from "@/components/queue/data";
 
 import { Button } from "../ui/button";
-import { SettingsContextProvider } from "./settings-context";
 import { useCurrUser } from "./user-context";
 
 const DummyRoomState: TBoard = {

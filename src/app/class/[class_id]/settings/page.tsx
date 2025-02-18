@@ -2,7 +2,6 @@
 
 import { AppHeader } from "@/components/app-header";
 import { useClass } from "@/context/class-context";
-import { EventsProvider } from "@/context/events-context";
 
 import { StudentViewSettings } from "./student-view";
 

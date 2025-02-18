@@ -4,13 +4,8 @@ import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-sc
 import { unsafeOverflowAutoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
-import {
-    draggable,
-    dropTargetForElements
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { preserveOffsetOnSource } from "@atlaskit/pragmatic-drag-and-drop/element/preserve-offset-on-source";
-import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { Copy, Ellipsis, Plus } from "lucide-react";
+import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { Ellipsis } from "lucide-react";
 import { memo, useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 
@@ -26,7 +21,6 @@ import {
     isDraggingAColumn
 } from "./data";
 import { blockBoardPanningAttr } from "./data-attributes";
-import { isSafari } from "./is-safari";
 import { isShallowEqual } from "./is-shallow-equal";
 import { SettingsContext } from "./settings-context";
 
