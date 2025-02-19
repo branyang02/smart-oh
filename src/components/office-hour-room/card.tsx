@@ -1,6 +1,6 @@
 "use client";
 
-import { isSafari } from "@/components/queue/is-safari";
+import { isSafari } from "@/components/office-hour-room/is-safari";
 import { useClass } from "@/context/class-context";
 import {
     type Edge,
@@ -90,7 +90,7 @@ export function CardDisplay({
     outerRef?: React.MutableRefObject<HTMLDivElement | null>;
     innerRef?: MutableRefObject<HTMLDivElement | null>;
 }) {
-    const { activeClass, activeRole, user } = useClass();
+    const { activeRole, user } = useClass();
 
     return (
         <div
@@ -146,7 +146,7 @@ export function CardDisplay({
 }
 
 export function Card({ card, columnId }: { card: TCard; columnId: string }) {
-    const { activeClass, activeRole, user } = useClass();
+    const { activeRole, user } = useClass();
 
     const outerRef = useRef<HTMLDivElement | null>(null);
     const innerRef = useRef<HTMLDivElement | null>(null);

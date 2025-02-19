@@ -1,9 +1,7 @@
-import { useClass } from "@/context/class-context";
-import { User } from "@/types";
 import { useEffect, useRef, useState } from "react";
 
-import DnD from "../queue/dnd";
 import { TBoard } from "./data";
+import DnD from "./dnd";
 import { SettingsContextProvider } from "./settings-context";
 
 const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {

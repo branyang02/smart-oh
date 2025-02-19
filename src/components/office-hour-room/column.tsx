@@ -1,14 +1,23 @@
 "use client";
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { useClass } from "@/context/class-context";
 import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { unsafeOverflowAutoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Ellipsis } from "lucide-react";
+import { Copy, Ellipsis, Plus } from "lucide-react";
 import { memo, useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 import { Card, CardShadow } from "./card";
 import {
     TCardData,
@@ -21,6 +30,7 @@ import {
     isDraggingAColumn
 } from "./data";
 import { blockBoardPanningAttr } from "./data-attributes";
+import { EditableTitle } from "./editable-title";
 import { isShallowEqual } from "./is-shallow-equal";
 import { SettingsContext } from "./settings-context";
 
@@ -60,7 +70,16 @@ const CardList = memo(function CardList({ column }: { column: TColumn }) {
     ));
 });
 
-export function Column({ column }: { column: TColumn }) {
+export function Column({
+    column,
+    onRemoveColumn,
+    onEditColumnTitle
+}: {
+    column: TColumn;
+    onRemoveColumn: (columnId: string) => void;
+    onEditColumnTitle: (columnId: string, newTitle: string) => void;
+}) {
+    const { user } = useClass();
     const scrollableRef = useRef<HTMLDivElement | null>(null);
     const outerFullHeightRef = useRef<HTMLDivElement | null>(null);
     const headerRef = useRef<HTMLDivElement | null>(null);
@@ -107,47 +126,6 @@ export function Column({ column }: { column: TColumn }) {
         }
 
         return combine(
-            // draggable({
-            //     element: header,
-            //     getInitialData: () => data,
-            //     onGenerateDragPreview({
-            //         source,
-            //         location,
-            //         nativeSetDragImage
-            //     }) {
-            //         const data = source.data;
-            //         invariant(isColumnData(data));
-            //         setCustomNativeDragPreview({
-            //             nativeSetDragImage,
-            //             getOffset: preserveOffsetOnSource({
-            //                 element: header,
-            //                 input: location.current.input
-            //             }),
-            //             render({ container }) {
-            //                 // Simple drag preview generation: just cloning the current element.
-            //                 // Not using react for this.
-            //                 const rect = inner.getBoundingClientRect();
-            //                 const preview = inner.cloneNode(true);
-            //                 invariant(preview instanceof HTMLElement);
-            //                 preview.style.width = `${rect.width}px`;
-            //                 preview.style.height = `${rect.height}px`;
-
-            //                 // rotation of native drag previews does not work in safari
-            //                 if (!isSafari()) {
-            //                     preview.style.transform = "rotate(4deg)";
-            //                 }
-
-            //                 container.appendChild(preview);
-            //             }
-            //         });
-            //     },
-            //     onDragStart() {
-            //         setState({ type: "is-dragging" });
-            //     },
-            //     onDrop() {
-            //         setState(idle);
-            //     }
-            // }),
             dropTargetForElements({
                 element: outer,
                 getData: () => data,
@@ -237,6 +215,10 @@ export function Column({ column }: { column: TColumn }) {
         );
     }, [column, settings]);
 
+    function handleRemoveColumn() {
+        onRemoveColumn(column.id);
+    }
+
     return (
         <div
             className="flex flex-shrink-0 select-none flex-col"
@@ -252,22 +234,40 @@ export function Column({ column }: { column: TColumn }) {
                     className={`flex max-h-full flex-col ${state.type === "is-column-over" ? "invisible" : ""}`}
                 >
                     <div
-                        className="flex flex-row items-center justify-between p-3 pb-2"
+                        className="flex flex-row items-center justify-between p-3"
                         ref={headerRef}
                     >
-                        <div className="pl-2 font-bold leading-4">
-                            {column.title}
-                        </div>
-                        <button
-                            type="button"
-                            className="rounded p-2"
-                            aria-label="More actions"
-                        >
-                            <Ellipsis size={16} />
-                        </button>
+                        <EditableTitle
+                            title={column.title}
+                            onTitleChange={(newTitle) =>
+                                onEditColumnTitle(column.id, newTitle)
+                            }
+                            isEditable={column.id !== "queue"}
+                        />
+                        {column.id !== "queue" && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="rounded h-6 w-6 p-1"
+                                        aria-label="More actions"
+                                    >
+                                        <Ellipsis />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuItem
+                                        onClick={handleRemoveColumn}
+                                        className="hover:cursor-pointer"
+                                    >
+                                        Remove Session
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
                     </div>
                     <div
-                        className="flex flex-col overflow-y-auto py-2 [overflow-anchor:none] [scrollbar-color:theme(colors.slate.600)_theme(colors.slate.700)] [scrollbar-width:thin] "
+                        className="flex flex-col overflow-y-auto pb-2 [overflow-anchor:none] [scrollbar-color:theme(colors.slate.600)_theme(colors.slate.700)] [scrollbar-width:thin] "
                         ref={scrollableRef}
                     >
                         <CardList column={column} />

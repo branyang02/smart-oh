@@ -385,10 +385,43 @@ export function Board({
         };
     }, []);
 
+    function createNewColumn(): TColumn {
+        const newId = String(Date.now());
+        return {
+            id: newId,
+            title: newId,
+            cards: []
+        };
+    }
+
+    function handleAddColumn() {
+        const newColumn = createNewColumn();
+        const newColumns = [...data.columns, newColumn];
+
+        setData((prev) => ({ ...prev, columns: newColumns }));
+        handleRoomStateChange({ ...data, columns: newColumns });
+    }
+
+    function handleRemoveColumn(columnId: string) {
+        const newColumns = data.columns.filter(
+            (column) => column.id !== columnId
+        );
+
+        setData((prev) => ({ ...prev, columns: newColumns }));
+        handleRoomStateChange({ ...data, columns: newColumns });
+    }
+
+    function handleEditColumnTitle(columnId: string, newTitle: string) {
+        const newColumns = data.columns.map((column) =>
+            column.id === columnId ? { ...column, title: newTitle } : column
+        );
+
+        setData((prev) => ({ ...prev, columns: newColumns }));
+        handleRoomStateChange({ ...data, columns: newColumns });
+    }
+
     return (
-        <div
-            className={`flex h-full flex-col ${settings.isBoardMoreObvious ? "px-32 py-20" : ""}`}
-        >
+        <div className="flex h-full flex-col">
             <div
                 className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3 [scrollbar-color:theme(colors.sky.600)_theme(colors.sky.800)] [scrollbar-width:thin] ${
                     settings.isBoardMoreObvious
@@ -398,8 +431,22 @@ export function Board({
                 ref={scrollableRef}
             >
                 {data.columns.map((column) => (
-                    <Column key={column.id} column={column} />
+                    <Column
+                        key={column.id}
+                        column={column}
+                        onRemoveColumn={handleRemoveColumn}
+                        onEditColumnTitle={handleEditColumnTitle}
+                    />
                 ))}
+                <div
+                    className="opacity-0 hover:opacity-100 flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4
+             transition-colors hover:bg-secondary cursor-pointer"
+                    onClick={handleAddColumn}
+                >
+                    <div className="text-secondary-foreground">
+                        Create New Session
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -1,15 +1,7 @@
-import { Board } from "@/components/queue/board";
-import { TBoard } from "@/components/queue/data";
+import { Board } from "@/components/office-hour-room/board";
+import { TBoard } from "@/components/office-hour-room/data";
 import { Button } from "@/components/ui/button";
 import { useClass } from "@/context/class-context";
-
-// type User = {
-//     id: string;
-//     name: string;
-//     email: string;
-//     emailVerified: Date | null;
-//     image: string | null;
-// };
 
 const DummyRoomState: TBoard = {
     classId: "class1",
@@ -30,7 +22,7 @@ const DummyRoomState: TBoard = {
                 name: "Bob Learner",
                 email: "bob@example.com",
                 emailVerified: null,
-                image: "https://example.com/bob.jpg"
+                image: null
             },
             role: "student"
         },
@@ -40,7 +32,7 @@ const DummyRoomState: TBoard = {
                 name: "Charlie Assistant",
                 email: "charlie@example.com",
                 emailVerified: null,
-                image: "https://example.com/charlie.jpg"
+                image: null
             },
             role: "TA"
         },
@@ -60,7 +52,7 @@ const DummyRoomState: TBoard = {
                 name: "Eve Mentor",
                 email: "eve@example.com",
                 emailVerified: null,
-                image: "https://example.com/eve.jpg"
+                image: null
             },
             role: "TA"
         },
@@ -80,7 +72,7 @@ const DummyRoomState: TBoard = {
                 name: "Grace Tutor",
                 email: "grace@example.com",
                 emailVerified: null,
-                image: "https://example.com/grace.jpg"
+                image: null
             },
             role: "TA"
         },
@@ -100,7 +92,7 @@ const DummyRoomState: TBoard = {
                 name: "Isaac Assistant",
                 email: "isaac@example.com",
                 emailVerified: null,
-                image: "https://example.com/isaac.jpg"
+                image: null
             },
             role: "TA"
         },
@@ -136,7 +128,7 @@ const DummyRoomState: TBoard = {
                         name: "Bob Learner",
                         email: "bob@example.com",
                         emailVerified: null,
-                        image: "https://example.com/bob.jpg"
+                        image: null
                     },
                     role: "student"
                 },
@@ -182,7 +174,7 @@ const DummyRoomState: TBoard = {
                         name: "Isaac Assistant",
                         email: "isaac@example.com",
                         emailVerified: null,
-                        image: "https://example.com/isaac.jpg"
+                        image: null
                     },
                     role: "TA"
                 },
@@ -208,7 +200,7 @@ const DummyRoomState: TBoard = {
                         name: "Grace Tutor",
                         email: "grace@example.com",
                         emailVerified: null,
-                        image: "https://example.com/grace.jpg"
+                        image: null
                     },
                     role: "TA"
                 }
@@ -224,7 +216,7 @@ const DummyRoomState: TBoard = {
                         name: "Eve Mentor",
                         email: "eve@example.com",
                         emailVerified: null,
-                        image: "https://example.com/eve.jpg"
+                        image: null
                     },
                     role: "TA"
                 }
@@ -245,7 +237,7 @@ const DummyRoomState: TBoard = {
                         name: "Charlie Assistant",
                         email: "charlie@example.com",
                         emailVerified: null,
-                        image: "https://example.com/charlie.jpg"
+                        image: null
                     },
                     role: "TA"
                 }
