@@ -1,5 +1,6 @@
 "use client";
 
+import { useClass } from "@/context/class-context";
 import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { unsafeOverflowAutoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
@@ -32,6 +33,7 @@ export function Board({
     initial: TBoard;
     handleRoomStateChange: (newRoomState: TBoard) => void;
 }) {
+    const { user, activeRole } = useClass();
     const [data, setData] = useState(initial);
 
     useEffect(() => {
@@ -385,17 +387,13 @@ export function Board({
         };
     }, []);
 
-    function createNewColumn(): TColumn {
+    function handleAddColumn() {
         const newId = String(Date.now());
-        return {
+        const newColumn = {
             id: newId,
             title: newId,
             cards: []
         };
-    }
-
-    function handleAddColumn() {
-        const newColumn = createNewColumn();
         const newColumns = [...data.columns, newColumn];
 
         setData((prev) => ({ ...prev, columns: newColumns }));
@@ -419,6 +417,43 @@ export function Board({
         setData((prev) => ({ ...prev, columns: newColumns }));
         handleRoomStateChange({ ...data, columns: newColumns });
     }
+    function handleJoinColumn(columnId: string) {
+        handleRoomStateChange({
+            ...data,
+            columns: data.columns.map((column) =>
+                column.id === columnId
+                    ? {
+                          ...column,
+                          cards: [
+                              ...column.cards,
+                              {
+                                  user: user,
+                                  role: activeRole!
+                              }
+                          ]
+                      }
+                    : column
+            )
+        });
+        user.currentColumnId = columnId;
+    }
+
+    function handleLeaveColumn(columnId: string) {
+        handleRoomStateChange({
+            ...data,
+            columns: data.columns.map((column) =>
+                column.id === columnId
+                    ? {
+                          ...column,
+                          cards: column.cards.filter(
+                              (card) => card.user.id !== user.id
+                          )
+                      }
+                    : column
+            )
+        });
+        user.currentColumnId = undefined;
+    }
 
     return (
         <div className="flex h-full flex-col">
@@ -436,17 +471,21 @@ export function Board({
                         column={column}
                         onRemoveColumn={handleRemoveColumn}
                         onEditColumnTitle={handleEditColumnTitle}
+                        onJoinColumn={handleJoinColumn}
+                        onLeaveColumn={handleLeaveColumn}
                     />
                 ))}
-                <div
-                    className="opacity-0 hover:opacity-100 flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4
+                {activeRole !== "student" && (
+                    <div
+                        className="opacity-0 hover:opacity-100 flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-4
              transition-colors hover:bg-secondary cursor-pointer"
-                    onClick={handleAddColumn}
-                >
-                    <div className="text-secondary-foreground">
-                        Create New Session
+                        onClick={handleAddColumn}
+                    >
+                        <div className="text-secondary-foreground">
+                            Create New Session
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

@@ -1,8 +1,8 @@
-import { User } from "@/types";
+import { Role, User } from "@/types";
 
 export type TCard = {
   user: User;
-  role: "student" | "TA";
+  role: Role;
 };
 
 export type TColumn = {

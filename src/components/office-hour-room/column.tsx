@@ -17,7 +17,6 @@ import { memo, useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 import { Card, CardShadow } from "./card";
 import {
     TCardData,
@@ -64,22 +63,37 @@ const idle = { type: "idle" } satisfies TColumnState;
  *
  * Created so that state changes to the column don't require all cards to be rendered
  */
-const CardList = memo(function CardList({ column }: { column: TColumn }) {
+const CardList = memo(function CardList({
+    column,
+    onLeaveColumn
+}: {
+    column: TColumn;
+    onLeaveColumn: (columnId: string) => void;
+}) {
     return column.cards.map((card) => (
-        <Card key={card.user.id} card={card} columnId={column.id} />
+        <Card
+            key={card.user.id}
+            card={card}
+            columnId={column.id}
+            onLeaveColumn={onLeaveColumn}
+        />
     ));
 });
 
 export function Column({
     column,
     onRemoveColumn,
-    onEditColumnTitle
+    onEditColumnTitle,
+    onJoinColumn,
+    onLeaveColumn
 }: {
     column: TColumn;
     onRemoveColumn: (columnId: string) => void;
     onEditColumnTitle: (columnId: string, newTitle: string) => void;
+    onJoinColumn: (columnId: string) => void;
+    onLeaveColumn: (columnId: string) => void;
 }) {
-    const { user } = useClass();
+    const { user, activeRole } = useClass();
     const scrollableRef = useRef<HTMLDivElement | null>(null);
     const outerFullHeightRef = useRef<HTMLDivElement | null>(null);
     const headerRef = useRef<HTMLDivElement | null>(null);
@@ -219,6 +233,10 @@ export function Column({
         onRemoveColumn(column.id);
     }
 
+    function handleJoinColumn() {
+        onJoinColumn(column.id);
+    }
+
     return (
         <div
             className="flex flex-shrink-0 select-none flex-col"
@@ -229,57 +247,88 @@ export function Column({
                 ref={innerRef}
                 {...{ [blockBoardPanningAttr]: true }}
             >
-                {/* Extra wrapping element to make it easy to toggle visibility of content when a column is dragging over */}
                 <div
-                    className={`flex max-h-full flex-col ${state.type === "is-column-over" ? "invisible" : ""}`}
+                    className="flex flex-row items-center justify-between p-3"
+                    ref={headerRef}
                 >
-                    <div
-                        className="flex flex-row items-center justify-between p-3"
-                        ref={headerRef}
-                    >
-                        <EditableTitle
-                            title={column.title}
-                            onTitleChange={(newTitle) =>
-                                onEditColumnTitle(column.id, newTitle)
-                            }
-                            isEditable={column.id !== "queue"}
-                        />
-                        {column.id !== "queue" && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        className="rounded h-6 w-6 p-1"
-                                        aria-label="More actions"
-                                    >
-                                        <Ellipsis />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem
-                                        onClick={handleRemoveColumn}
-                                        className="hover:cursor-pointer"
-                                    >
-                                        Remove Session
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )}
-                    </div>
-                    <div
-                        className="flex flex-col overflow-y-auto pb-2 [overflow-anchor:none] [scrollbar-color:theme(colors.slate.600)_theme(colors.slate.700)] [scrollbar-width:thin] "
-                        ref={scrollableRef}
-                    >
-                        <CardList column={column} />
-                        {state.type === "is-card-over" &&
-                        !state.isOverChildCard ? (
-                            <div className="flex-shrink-0 px-3 py-1">
-                                <CardShadow dragging={state.dragging} />
-                            </div>
-                        ) : null}
-                    </div>
+                    <EditableTitle
+                        title={column.title}
+                        onTitleChange={(newTitle) =>
+                            onEditColumnTitle(column.id, newTitle)
+                        }
+                        isEditable={
+                            column.id !== "queue" && activeRole !== "student"
+                        }
+                    />
+                    {column.id !== "queue" && activeRole !== "student" && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className="rounded p-1"
+                                    aria-label="More actions"
+                                >
+                                    <Ellipsis />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem
+                                    onClick={handleRemoveColumn}
+                                    className="hover:cursor-pointer"
+                                >
+                                    Remove Session
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
+                <div
+                    className="flex flex-col pb-2 overflow-y-auto [overflow-anchor:none] [scrollbar-color:theme(colors.slate.600)_theme(colors.slate.700)] [scrollbar-width:thin] "
+                    ref={scrollableRef}
+                >
+                    <CardList column={column} onLeaveColumn={onLeaveColumn} />
+                    {state.type === "is-card-over" && !state.isOverChildCard ? (
+                        <div className="flex-shrink-0 px-3 py-1">
+                            <CardShadow dragging={state.dragging} />
+                        </div>
+                    ) : null}
+                </div>
+                <JoinColumnButton
+                    column={column}
+                    handleJoinQueue={handleJoinColumn}
+                />
             </div>
         </div>
     );
+}
+
+function JoinColumnButton({
+    column,
+    handleJoinQueue
+}: {
+    column: TColumn;
+    handleJoinQueue: () => void;
+}) {
+    const { user, activeRole } = useClass();
+    if (
+        (activeRole === "student" &&
+            column.id === "queue" &&
+            user.currentColumnId === undefined) ||
+        (activeRole !== "student" &&
+            column.id !== "queue" &&
+            user.currentColumnId === undefined)
+    ) {
+        return (
+            <div className="flex flex-row p-2 pt-0">
+                <Button
+                    className="flex flex-grow flex-row gap-1 rounded p-2 justify-start"
+                    variant={"ghost"}
+                    onClick={handleJoinQueue}
+                >
+                    <Plus />
+                    {`Join ${column.id === "queue" ? "Queue" : "Session"}`}
+                </Button>
+            </div>
+        );
+    }
 }

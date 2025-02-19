@@ -14,13 +14,19 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { preserveOffsetOnSource } from "@atlaskit/pragmatic-drag-and-drop/element/preserve-offset-on-source";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { GripVertical, LockKeyhole, UserIcon } from "lucide-react";
+import { Ellipsis, GripVertical, LockKeyhole, UserIcon } from "lucide-react";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import invariant from "tiny-invariant";
 
 import Avatar from "../avatar";
 import { Button } from "../ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "../ui/dropdown-menu";
 import {
     TCard,
     getCardData,
@@ -79,18 +85,27 @@ export function CardShadow({ dragging }: { dragging: DOMRect }) {
 
 export function CardDisplay({
     card,
+    columnId,
     state,
     draggable,
     outerRef,
-    innerRef
+    innerRef,
+    onLeaveColumn
 }: {
     card: TCard;
+    columnId?: string;
     state: TCardState;
     draggable?: boolean;
     outerRef?: React.MutableRefObject<HTMLDivElement | null>;
     innerRef?: MutableRefObject<HTMLDivElement | null>;
+    onLeaveColumn?: (columnId: string) => void;
 }) {
     const { activeRole, user } = useClass();
+    const handleLeaveColumn = () => {
+        if (onLeaveColumn && columnId) {
+            onLeaveColumn(columnId);
+        }
+    };
 
     return (
         <div
@@ -135,6 +150,27 @@ export function CardDisplay({
                     )}
                     <Avatar user={card.user} />
                     <div>{card.user.name}</div>
+                    {card.user.id === user.id && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className="rounded p-1 ml-auto"
+                                    aria-label="More actions"
+                                >
+                                    <Ellipsis />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem
+                                    onClick={handleLeaveColumn}
+                                    className="hover:cursor-pointer"
+                                >
+                                    {`Leave ${columnId === "queue" ? "queue" : "session"}`}
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
             </div>
             {/* Put a shadow after the item if closer to the bottom edge */}
@@ -145,7 +181,15 @@ export function CardDisplay({
     );
 }
 
-export function Card({ card, columnId }: { card: TCard; columnId: string }) {
+export function Card({
+    card,
+    columnId,
+    onLeaveColumn
+}: {
+    card: TCard;
+    columnId: string;
+    onLeaveColumn: (columnId: string) => void;
+}) {
     const { activeRole, user } = useClass();
 
     const outerRef = useRef<HTMLDivElement | null>(null);
@@ -281,7 +325,9 @@ export function Card({ card, columnId }: { card: TCard; columnId: string }) {
                 innerRef={innerRef}
                 state={state}
                 card={card}
+                columnId={columnId}
                 draggable={isDraggable}
+                onLeaveColumn={onLeaveColumn}
             />
             {state.type === "preview"
                 ? createPortal(

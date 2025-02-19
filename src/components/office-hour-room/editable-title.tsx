@@ -41,7 +41,7 @@ export function EditableTitle({
 
     return (
         <div
-            className="relative group font-bold leading-4 flex items-center cursor-pointer"
+            className={`relative group text-lg font-semibold flex items-center ${isEditable ? "cursor-pointer" : ""}`}
             onDoubleClick={handleDoubleClick}
         >
             {isEditing ? (

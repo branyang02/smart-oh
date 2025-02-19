@@ -1,7 +1,6 @@
 import { Board } from "@/components/office-hour-room/board";
 import { TBoard } from "@/components/office-hour-room/data";
 import { Button } from "@/components/ui/button";
-import { useClass } from "@/context/class-context";
 
 const DummyRoomState: TBoard = {
     classId: "class1",
@@ -263,8 +262,6 @@ export default function DnD({
     newRoomState: TBoard;
     handleRoomStateChange: (newRoomState: TBoard) => void;
 }) {
-    const { activeRole, user } = useClass();
-
     return (
         <div>
             <Button
@@ -274,100 +271,6 @@ export default function DnD({
             >
                 Use Dummy Data
             </Button>
-            {activeRole === "student" && (
-                <>
-                    <Button
-                        onClick={() => {
-                            handleRoomStateChange({
-                                ...newRoomState,
-                                columns: newRoomState.columns.map((column) =>
-                                    column.id === "queue"
-                                        ? {
-                                              ...column,
-                                              cards: [
-                                                  ...column.cards,
-                                                  {
-                                                      user: user,
-                                                      role: activeRole
-                                                  }
-                                              ]
-                                          }
-                                        : column
-                                )
-                            });
-                        }}
-                    >
-                        Join Queue
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            handleRoomStateChange({
-                                ...newRoomState,
-                                columns: newRoomState.columns.map((column) =>
-                                    column.id === "queue"
-                                        ? {
-                                              ...column,
-                                              cards: column.cards.filter(
-                                                  (card) =>
-                                                      card.user.id !== user.id
-                                              )
-                                          }
-                                        : column
-                                )
-                            });
-                        }}
-                    >
-                        Leave Queue
-                    </Button>
-                </>
-            )}
-            {activeRole === "TA" && (
-                <>
-                    <Button
-                        onClick={() => {
-                            handleRoomStateChange({
-                                ...newRoomState,
-                                columns: newRoomState.columns.map((column) =>
-                                    column.id === "session-1"
-                                        ? {
-                                              ...column,
-                                              cards: [
-                                                  ...column.cards,
-                                                  {
-                                                      user: user,
-                                                      role: activeRole
-                                                  }
-                                              ]
-                                          }
-                                        : column
-                                )
-                            });
-                        }}
-                    >
-                        Join Session 1
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            handleRoomStateChange({
-                                ...newRoomState,
-                                columns: newRoomState.columns.map((column) =>
-                                    column.id === "session-1"
-                                        ? {
-                                              ...column,
-                                              cards: column.cards.filter(
-                                                  (card) =>
-                                                      card.user.id !== user.id
-                                              )
-                                          }
-                                        : column
-                                )
-                            });
-                        }}
-                    >
-                        Leave Session 1
-                    </Button>
-                </>
-            )}
             <Board
                 initial={newRoomState}
                 handleRoomStateChange={handleRoomStateChange}

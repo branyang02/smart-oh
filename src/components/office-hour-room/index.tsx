@@ -1,3 +1,4 @@
+import { useClass } from "@/context/class-context";
 import { useEffect, useRef, useState } from "react";
 
 import { TBoard } from "./data";
