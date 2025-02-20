@@ -12,7 +12,7 @@ import { unsafeOverflowAutoScrollForElements } from "@atlaskit/pragmatic-drag-an
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import { DragLocationHistory } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Copy, Ellipsis, Plus } from "lucide-react";
+import { Ellipsis, Plus } from "lucide-react";
 import { memo, useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 
@@ -93,7 +93,7 @@ export function Column({
     onJoinColumn: (columnId: string) => void;
     onLeaveColumn: (columnId: string) => void;
 }) {
-    const { user, activeRole } = useClass();
+    const { activeRole } = useClass();
     const scrollableRef = useRef<HTMLDivElement | null>(null);
     const outerFullHeightRef = useRef<HTMLDivElement | null>(null);
     const headerRef = useRef<HTMLDivElement | null>(null);

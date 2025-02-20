@@ -1,5 +1,5 @@
 import { useClass } from "@/context/class-context";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { TBoard } from "./data";
 import DnD from "./dnd";
@@ -40,18 +40,25 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         return () => {
             socket.close();
         };
-    }, [currClassId]);
+    }, [currClassId, activeRole]);
 
-    const sendBoardUpdate = (updatedBoard: TBoard) => {
+    const sendBoardUpdate = useCallback((updatedBoard: TBoard) => {
         if (wsRef.current?.readyState === WebSocket.OPEN) {
             wsRef.current.send(JSON.stringify(updatedBoard));
         }
-    };
+    }, []);
 
-    const handleRoomStateChange = (newRoomState: TBoard) => {
-        setRoomState(newRoomState);
-        sendBoardUpdate(newRoomState);
-    };
+    const handleRoomStateChange = useCallback(
+        (newRoomState: TBoard) => {
+            setRoomState(newRoomState);
+            sendBoardUpdate(newRoomState);
+        },
+        [sendBoardUpdate]
+    );
+
+    if (!roomState) {
+        return <div>Loading…</div>;
+    }
 
     if (!roomState) {
         return <div>Loading…</div>;

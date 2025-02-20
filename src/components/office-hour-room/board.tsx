@@ -359,7 +359,7 @@ export function Board({
                 }
             })
         );
-    }, [data, settings]);
+    }, [data, settings, handleRoomStateChange]);
 
     // Panning the board
     useEffect(() => {

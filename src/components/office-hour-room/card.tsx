@@ -317,7 +317,7 @@ export function Card({
                 }
             })
         );
-    }, [card, columnId]);
+    }, [card, columnId, isDraggable]);
     return (
         <>
             <CardDisplay
