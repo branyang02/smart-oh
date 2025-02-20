@@ -1,7 +1,6 @@
 import { useClass } from "@/context/class-context";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button } from "../ui/button";
 import { TBoard } from "./data";
 import DnD from "./dnd";
 import { SettingsContextProvider } from "./settings-context";

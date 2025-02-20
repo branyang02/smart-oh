@@ -14,7 +14,7 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { preserveOffsetOnSource } from "@atlaskit/pragmatic-drag-and-drop/element/preserve-offset-on-source";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { Ellipsis, GripVertical, LockKeyhole, UserIcon } from "lucide-react";
+import { Ellipsis, GripVertical, UserIcon } from "lucide-react";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import invariant from "tiny-invariant";
@@ -100,7 +100,7 @@ export function CardDisplay({
     innerRef?: MutableRefObject<HTMLDivElement | null>;
     onLeaveColumn?: (columnId: string) => void;
 }) {
-    const { activeRole, user } = useClass();
+    const { user } = useClass();
     const handleLeaveColumn = () => {
         if (onLeaveColumn && columnId) {
             onLeaveColumn(columnId);
