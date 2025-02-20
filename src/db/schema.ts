@@ -103,7 +103,7 @@ export const classes = pgTable("class", {
     createdAt: timestamp("created_at").notNull().defaultNow()
 });
 
-export const rolesEnum = pgEnum("roles", ["student", "TA", "instructor"]);
+export const rolesEnum = pgEnum("role", ["student", "TA", "instructor"]);
 
 export const userClasses = pgTable(
     "user_class",
@@ -114,7 +114,7 @@ export const userClasses = pgTable(
         classId: text("class_id")
             .notNull()
             .references(() => classes.id),
-        role: rolesEnum("roles").notNull(),
+        role: rolesEnum("role").notNull(),
         createdAt: timestamp("created_at").notNull().defaultNow()
     },
     (table) => [primaryKey({ columns: [table.userId, table.classId] })]

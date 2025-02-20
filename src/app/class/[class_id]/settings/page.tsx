@@ -2,9 +2,9 @@
 
 import { AppHeader } from "@/components/app-header";
 import { useClass } from "@/context/class-context";
-import { EventsProvider } from "@/context/events-context";
 
 import { StudentViewSettings } from "./student-view";
+import { TAViewSettings } from "./ta-view";
 
 export default function CalendarPage() {
     const { activeClass, activeRole } = useClass();
@@ -25,7 +25,7 @@ export default function CalendarPage() {
                 {activeRole === "student" ? (
                     <StudentViewSettings />
                 ) : activeRole === "TA" ? (
-                    <div>TA View</div>
+                    <TAViewSettings />
                 ) : (
                     <div>Instructor View</div>
                 )}

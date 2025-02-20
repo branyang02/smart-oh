@@ -5,7 +5,7 @@
  * the 'classes' table or write data to it.
  */
 import { db } from "@/db";
-import { UserClass, classes, userClasses, users } from "@/db/schema";
+import { classes, userClasses, users } from "@/db/schema";
 import { Class, Role } from "@/types";
 import { and, eq } from "drizzle-orm";
 
@@ -99,7 +99,7 @@ export async function joinClassFromClassId(
         );
     }
     // insert user into class
-    const result = await db
+    await db
         .insert(userClasses)
         .values({ userId, classId, role })
         .returning();
