@@ -1,17 +1,18 @@
 import { useClass } from "@/context/class-context";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Button } from "../ui/button";
 import { TBoard } from "./data";
 import DnD from "./dnd";
 import { SettingsContextProvider } from "./settings-context";
 
 const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
-    const { user, activeRole } = useClass();
+    const { user } = useClass();
     const wsRef = useRef<WebSocket | null>(null);
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
     useEffect(() => {
-        const wsUrl = `ws://localhost:8000/ws/${currClassId}?role=${activeRole}`;
+        const wsUrl = `ws://localhost:8000/ws/${currClassId}`;
         const socket = new WebSocket(wsUrl);
 
         socket.onopen = () => {
@@ -38,9 +39,10 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         wsRef.current = socket;
 
         return () => {
+            console.log("Closing WebSockeet connection");
             socket.close();
         };
-    }, [currClassId, activeRole]);
+    }, [currClassId]);
 
     const sendBoardUpdate = useCallback((updatedBoard: TBoard) => {
         if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -50,15 +52,10 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
 
     const handleRoomStateChange = useCallback(
         (newRoomState: TBoard) => {
-            setRoomState(newRoomState);
             sendBoardUpdate(newRoomState);
         },
         [sendBoardUpdate]
     );
-
-    if (!roomState) {
-        return <div>Loading…</div>;
-    }
 
     if (!roomState) {
         return <div>Loading…</div>;
