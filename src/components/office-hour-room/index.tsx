@@ -61,9 +61,6 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         (card) => card.user.id === user.id
     )?.user.currentColumnId;
 
-    console.log(roomState);
-    console.log("Column ID: ", user.currentColumnId);
-
     return (
         <SettingsContextProvider>
             <DnD
