@@ -7,7 +7,7 @@ import { createId } from "@paralleldrive/cuid2";
 
 
 async function seedDB() {
-    if (process.env.PROJECT_ENV !== "dev") {
+    if (process.env.PROJECT_ENV !== "development") {
         throw new Error("Database seeding is only allowed in development environment");
     }
     console.log("Seeding smart-oh-dev database...");

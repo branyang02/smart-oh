@@ -7,7 +7,7 @@ import { reset } from "drizzle-seed"
 
 
 async function resetDB() {
-    if (process.env.PROJECT_ENV !== "dev") {
+    if (process.env.PROJECT_ENV !== "development") {
         throw new Error("Database resetting is only allowed in development environment");
     }
     console.log("Resetting smart-oh-dev database...");
