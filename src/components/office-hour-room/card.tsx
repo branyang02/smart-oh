@@ -118,7 +118,7 @@ export function CardDisplay({
             ) : null}
 
             <div
-                className={`rounded p-2 ${card.role === "TA" ? "border-green-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
+                className={`rounded p-2 ${card.role === "TA" ? "border-green-300" : card.user.id === user.id ? "border-blue-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
                 ref={innerRef}
                 style={
                     state.type === "preview"
@@ -133,7 +133,7 @@ export function CardDisplay({
                 }
             >
                 <div className="flex items-center gap-2">
-                    {(draggable || activeRole === "TA") && (
+                    {draggable && (
                         <Button
                             variant={"ghost"}
                             className="p-1 text-secondary-foreground/50 h-auto cursor-grab"
@@ -141,12 +141,15 @@ export function CardDisplay({
                             <span className="sr-only">Move user</span>
                             {user.id === card.user.id ? (
                                 <UserIcon />
-                            ) : card.role === "student" ? (
-                                <GripVertical />
                             ) : (
-                                <LockKeyhole />
+                                <GripVertical />
                             )}
                         </Button>
+                    )}
+                    {card.role === "TA" && card.user.id !== user.id && (
+                        <p className="p-1 text-secondary-foreground/50 h-auto">
+                            TA
+                        </p>
                     )}
                     <Avatar user={card.user} />
                     <div>{card.user.name}</div>
