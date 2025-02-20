@@ -11,7 +11,7 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
     useEffect(() => {
-        const wsUrl = `ws://localhost:8000/ws/${currClassId}`;
+        const wsUrl = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/ws/${currClassId}`;
         const socket = new WebSocket(wsUrl);
 
         socket.onopen = () => {
@@ -38,7 +38,6 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         wsRef.current = socket;
 
         return () => {
-            console.log("Closing WebSockeet connection");
             socket.close();
         };
     }, [currClassId]);

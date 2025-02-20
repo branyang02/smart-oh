@@ -7,6 +7,17 @@ import Google from "next-auth/providers/google";
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
     return {
         adapter: DrizzleAdapter(db),
-        providers: [GitHub, Google]
+        providers: [GitHub, Google],
+        cookies: {
+            sessionToken: {
+                name: "authjs.session-token",
+                options: {
+                    httpOnly: true,
+                    sameSite: "none",
+                    secure: process.env.NODE_ENV === "production",
+                    path: "/",
+                },
+            },
+        }
     };
 });
