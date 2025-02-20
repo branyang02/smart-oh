@@ -313,10 +313,10 @@ function JoinColumnButton({
     if (
         (activeRole === "student" &&
             column.id === "queue" &&
-            user.currentColumnId === undefined) ||
+            user.currentColumnId == null) ||
         (activeRole !== "student" &&
             column.id !== "queue" &&
-            user.currentColumnId === undefined)
+            user.currentColumnId == null)
     ) {
         return (
             <div className="flex flex-row p-2 pt-0">

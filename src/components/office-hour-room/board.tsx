@@ -119,7 +119,6 @@ export function Board({
                             const columns = Array.from(data.columns);
                             columns[homeColumnIndex] = updated;
                             handleRoomStateChange({ ...data, columns });
-                            setData({ ...data, columns });
                             return;
                         }
 
@@ -158,8 +157,23 @@ export function Board({
                             ...destination,
                             cards: destinationCards
                         };
-                        handleRoomStateChange({ ...data, columns });
-                        setData({ ...data, columns });
+                        const allUsers = data.allUsers.map((card) =>
+                            card.user.id === dragging.card.user.id
+                                ? {
+                                      ...card,
+                                      user: {
+                                          ...card.user,
+                                          currentColumnId: destination.id
+                                      }
+                                  }
+                                : card
+                        );
+
+                        handleRoomStateChange({
+                            ...data,
+                            columns,
+                            allUsers
+                        });
                         return;
                     }
 
@@ -191,7 +205,6 @@ export function Board({
                             const columns = Array.from(data.columns);
                             columns[homeColumnIndex] = updated;
                             handleRoomStateChange({ ...data, columns });
-                            setData({ ...data, columns });
                             return;
                         }
 
@@ -216,8 +229,23 @@ export function Board({
                             ...destination,
                             cards: destinationCards
                         };
-                        handleRoomStateChange({ ...data, columns });
-                        setData({ ...data, columns });
+                        const allUsers = data.allUsers.map((card) =>
+                            card.user.id === dragging.card.user.id
+                                ? {
+                                      ...card,
+                                      user: {
+                                          ...card.user,
+                                          currentColumnId: destination.id
+                                      }
+                                  }
+                                : card
+                        );
+
+                        handleRoomStateChange({
+                            ...data,
+                            columns,
+                            allUsers
+                        });
                         return;
                     }
                 }
@@ -261,8 +289,23 @@ export function Board({
                         startIndex: homeIndex,
                         finishIndex: destinationIndex
                     });
-                    handleRoomStateChange({ ...data, columns: reordered });
-                    setData({ ...data, columns: reordered });
+                    const allUsers = data.allUsers.map((card) =>
+                        card.user.currentColumnId === dragging.column.id
+                            ? {
+                                  ...card,
+                                  user: {
+                                      ...card.user,
+                                      currentColumnId: dropTargetData.column.id
+                                  }
+                              }
+                            : card
+                    );
+
+                    handleRoomStateChange({
+                        ...data,
+                        columns: reordered,
+                        allUsers
+                    });
                 }
             }),
             autoScrollForElements({
@@ -396,16 +439,19 @@ export function Board({
         };
         const newColumns = [...data.columns, newColumn];
 
-        setData((prev) => ({ ...prev, columns: newColumns }));
         handleRoomStateChange({ ...data, columns: newColumns });
     }
 
     function handleRemoveColumn(columnId: string) {
+        data.allUsers.forEach((card) => {
+            if (card.user.currentColumnId === columnId) {
+                card.user.currentColumnId = undefined;
+            }
+        });
         const newColumns = data.columns.filter(
             (column) => column.id !== columnId
         );
 
-        setData((prev) => ({ ...prev, columns: newColumns }));
         handleRoomStateChange({ ...data, columns: newColumns });
     }
 
@@ -414,51 +460,70 @@ export function Board({
             column.id === columnId ? { ...column, title: newTitle } : column
         );
 
-        setData((prev) => ({ ...prev, columns: newColumns }));
         handleRoomStateChange({ ...data, columns: newColumns });
     }
+
     function handleJoinColumn(columnId: string) {
+        const newAllUsers = data.allUsers.map((card) =>
+            card.user.id === user.id
+                ? { ...card, user: { ...card.user, currentColumnId: columnId } }
+                : card
+        );
+
+        const newColumns = data.columns.map((column) =>
+            column.id === columnId
+                ? {
+                      ...column,
+                      cards: [
+                          ...column.cards,
+                          {
+                              user: user,
+                              role: activeRole!
+                          }
+                      ]
+                  }
+                : column
+        );
+
         handleRoomStateChange({
             ...data,
-            columns: data.columns.map((column) =>
-                column.id === columnId
-                    ? {
-                          ...column,
-                          cards: [
-                              ...column.cards,
-                              {
-                                  user: user,
-                                  role: activeRole!
-                              }
-                          ]
-                      }
-                    : column
-            )
+            allUsers: newAllUsers,
+            columns: newColumns
         });
-        user.currentColumnId = columnId;
     }
 
     function handleLeaveColumn(columnId: string) {
+        const newAllUsers = data.allUsers.map((card) =>
+            card.user.currentColumnId === columnId
+                ? {
+                      ...card,
+                      user: { ...card.user, currentColumnId: undefined }
+                  }
+                : card
+        );
+
+        const newColumns = data.columns.map((column) =>
+            column.id === columnId
+                ? {
+                      ...column,
+                      cards: column.cards.filter(
+                          (card) => card.user.id !== user.id
+                      )
+                  }
+                : column
+        );
+
         handleRoomStateChange({
             ...data,
-            columns: data.columns.map((column) =>
-                column.id === columnId
-                    ? {
-                          ...column,
-                          cards: column.cards.filter(
-                              (card) => card.user.id !== user.id
-                          )
-                      }
-                    : column
-            )
+            allUsers: newAllUsers,
+            columns: newColumns
         });
-        user.currentColumnId = undefined;
     }
 
     return (
         <div className="flex h-full flex-col">
             <div
-                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3 [scrollbar-color:theme(colors.sky.600)_theme(colors.sky.800)] [scrollbar-width:thin] ${
+                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3 overflow-y-auto [scrollbar-color:theme(colors.sky.600)_theme(colors.sky.800)] [scrollbar-width:thin] ${
                     settings.isBoardMoreObvious
                         ? "rounded border-2 border-dashed"
                         : ""

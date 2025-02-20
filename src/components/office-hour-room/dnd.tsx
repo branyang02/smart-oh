@@ -266,7 +266,19 @@ export default function DnD({
         <div>
             <Button
                 onClick={() => {
-                    handleRoomStateChange(DummyRoomState);
+                    const combinedAllUsers = [
+                        ...newRoomState.allUsers,
+                        ...DummyRoomState.allUsers
+                    ];
+
+                    const finalState = {
+                        ...newRoomState,
+                        ...DummyRoomState,
+                        allUsers: combinedAllUsers
+                    };
+
+                    // Pass the final state to the handler
+                    handleRoomStateChange(finalState);
                 }}
             >
                 Use Dummy Data

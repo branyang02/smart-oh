@@ -6,11 +6,12 @@ import DnD from "./dnd";
 import { SettingsContextProvider } from "./settings-context";
 
 const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
+    const { user, activeRole } = useClass();
     const wsRef = useRef<WebSocket | null>(null);
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
     useEffect(() => {
-        const wsUrl = `ws://localhost:8000/ws/${currClassId}`;
+        const wsUrl = `ws://localhost:8000/ws/${currClassId}?role=${activeRole}`;
         const socket = new WebSocket(wsUrl);
 
         socket.onopen = () => {
@@ -55,6 +56,13 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
     if (!roomState) {
         return <div>Loading…</div>;
     }
+
+    user.currentColumnId = roomState.allUsers.find(
+        (card) => card.user.id === user.id
+    )?.user.currentColumnId;
+
+    console.log(roomState);
+    console.log("Column ID: ", user.currentColumnId);
 
     return (
         <SettingsContextProvider>
