@@ -9,7 +9,10 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "db:migrate": "npx drizzle-kit generate",
-    "db:push": "npx drizzle-kit push",
+    "db:push-development": "PROJECT_ENV=development npx drizzle-kit push",
+    "db:push-preview": "PROJECT_ENV=preview npx drizzle-kit push",
+    "db:push-production": "PROJECT_ENV=production npx drizzle-kit push",
+    "db:push-test": "PROJECT_ENV=test npx drizzle-kit push",
     "test": "vitest",
     "db:seed": "ts-node --project tsconfig.scripts.json src/scripts/db-seed.ts",
     "db:reset": "ts-node --project tsconfig.scripts.json src/scripts/db-reset.ts"
