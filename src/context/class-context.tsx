@@ -12,6 +12,7 @@ interface ClassContextType {
     courseInstructors?: User[];
     activeClass?: Class;
     activeRole?: Role;
+    sessionToken: string;
 }
 
 const ClassContext = createContext<ClassContextType | null>(null);
