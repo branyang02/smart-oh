@@ -4,6 +4,7 @@ import { ClassProvider } from "@/context/class-context";
 import { getClassFromClassId, getUserClassesFromUserId } from "@/db/classes";
 import { getInstructorsFromClassId, getTAsFromClassId } from "@/db/users";
 import { getUser } from "@/utils/user-utils";
+import { cookies } from "next/headers";
 import React from "react";
 
 export default async function ClassLayout({
@@ -15,6 +16,10 @@ export default async function ClassLayout({
 }) {
     const user = await getUser();
     const classId = (await params).class_id;
+
+    const cookieStore = cookies();
+    const sessionCookie = (await cookieStore).get("authjs.session-token");
+    const sessionToken = sessionCookie?.value ?? "";
 
     const [userClasses, courseTAs, courseInstructors, activeClass] =
         await Promise.all([
@@ -53,7 +58,8 @@ export default async function ClassLayout({
                 courseTAs,
                 courseInstructors,
                 activeClass,
-                activeRole
+                activeRole,
+                sessionToken
             }}
         >
             <AppSidebar user={user} activeUserIds={activeUserIds} />

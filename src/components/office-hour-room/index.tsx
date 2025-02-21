@@ -6,12 +6,15 @@ import DnD from "./dnd";
 import { SettingsContextProvider } from "./settings-context";
 
 const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
-    const { user } = useClass();
+    const { user, sessionToken } = useClass();
     const wsRef = useRef<WebSocket | null>(null);
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
     useEffect(() => {
-        const wsUrl = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/ws/${currClassId}`;
+        if (!currClassId || !sessionToken) {
+            return;
+        }
+        const wsUrl = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/ws/${currClassId}?token=${encodeURIComponent(sessionToken)}`;
         const socket = new WebSocket(wsUrl);
 
         socket.onopen = () => {
@@ -40,7 +43,7 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         return () => {
             socket.close();
         };
-    }, [currClassId]);
+    }, [currClassId, sessionToken]);
 
     const sendBoardUpdate = useCallback((updatedBoard: TBoard) => {
         if (wsRef.current?.readyState === WebSocket.OPEN) {

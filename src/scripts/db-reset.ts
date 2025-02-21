@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.development" });
 
 import { db } from "../db/index";
 import { users, userClasses, classes } from "../db/schema";

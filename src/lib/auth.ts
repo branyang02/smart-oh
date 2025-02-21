@@ -14,7 +14,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
                 options: {
                     httpOnly: true,
                     sameSite: "none",
-                    secure: process.env.NODE_ENV === "production",
+                    secure: true,
                     path: "/",
                 },
             },
