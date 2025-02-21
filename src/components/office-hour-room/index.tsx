@@ -11,6 +11,9 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
     useEffect(() => {
+        if (!currClassId || !sessionToken) {
+            return;
+        }
         const wsUrl = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/ws/${currClassId}?token=${encodeURIComponent(sessionToken)}`;
         const socket = new WebSocket(wsUrl);
 
@@ -40,7 +43,7 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         return () => {
             socket.close();
         };
-    }, [currClassId]);
+    }, [currClassId, sessionToken]);
 
     const sendBoardUpdate = useCallback((updatedBoard: TBoard) => {
         if (wsRef.current?.readyState === WebSocket.OPEN) {
