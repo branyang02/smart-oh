@@ -77,3 +77,4 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
 };
 
 export default OfficeHourRoom;
+
