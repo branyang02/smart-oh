@@ -40,7 +40,7 @@ jobs:
             uv sync
 
             echo "🔄 Restarting FastAPI service..."
-            sudo systemctl restart fastapi.service
+            sudo systemctl restart smart-oh-preview.service
 
             echo "✅ Deployment completed successfully!"
           EOF
