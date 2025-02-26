@@ -26,7 +26,7 @@ jobs:
             set -e  # Exit immediately if a command fails
 
             echo "🔄 Switching to project directory..."
-            cd smart-oh
+            cd smart-oh-preview
 
             echo "⬇️ Pulling latest changes..."
             git fetch --all
