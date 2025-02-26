@@ -492,9 +492,9 @@ export function Board({
         });
     }
 
-    function handleLeaveColumn(columnId: string) {
+    function handleLeaveColumn(columnId: string, userId: string) {
         const newAllUsers = data.allUsers.map((card) =>
-            card.user.currentColumnId === columnId
+            card.user.currentColumnId === columnId && card.user.id === userId
                 ? {
                       ...card,
                       user: { ...card.user, currentColumnId: undefined }
