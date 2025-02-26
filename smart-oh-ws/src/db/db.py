@@ -41,7 +41,7 @@ def get_user_by_session_token(session_token: str) -> User | None:
             user_id, expires = session_row
 
             # 2) Check expiration
-            now_utc = datetime.datetime.utcnow()
+            now_utc = datetime.datetime.now(datetime.timezone.utc)
             if expires < now_utc:
                 return None
 
