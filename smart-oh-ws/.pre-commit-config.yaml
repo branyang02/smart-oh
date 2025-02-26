@@ -1,9 +1,0 @@
-repos:
-  - repo: local
-    hooks:
-      - id: update-requirements
-        name: Update requirements.txt
-        entry: uv run pip freeze > requirements.txt
-        language: system
-        always_run: true
-        stages: [pre-commit]
