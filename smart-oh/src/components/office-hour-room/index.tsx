@@ -1,8 +1,8 @@
 import { useClass } from "@/context/class-context";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Board } from "./board";
 import { TBoard } from "./data";
-import DnD from "./dnd";
 import { SettingsContextProvider } from "./settings-context";
 
 const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
@@ -68,8 +68,8 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
 
     return (
         <SettingsContextProvider>
-            <DnD
-                newRoomState={roomState!}
+            <Board
+                initial={roomState!}
                 handleRoomStateChange={handleRoomStateChange}
             />
         </SettingsContextProvider>

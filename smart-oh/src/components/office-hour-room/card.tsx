@@ -98,12 +98,12 @@ export function CardDisplay({
     draggable?: boolean;
     outerRef?: React.MutableRefObject<HTMLDivElement | null>;
     innerRef?: MutableRefObject<HTMLDivElement | null>;
-    onLeaveColumn?: (columnId: string) => void;
+    onLeaveColumn?: (columnId: string, userId: string) => void;
 }) {
     const { user } = useClass();
     const handleLeaveColumn = () => {
         if (onLeaveColumn && columnId) {
-            onLeaveColumn(columnId);
+            onLeaveColumn(columnId, user.id);
         }
     };
 
@@ -191,7 +191,7 @@ export function Card({
 }: {
     card: TCard;
     columnId: string;
-    onLeaveColumn: (columnId: string) => void;
+    onLeaveColumn: (columnId: string, userId: string) => void;
 }) {
     const { activeRole, user } = useClass();
 
