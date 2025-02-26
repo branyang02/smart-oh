@@ -3,7 +3,7 @@ name: Deploy to AWS EC2
 on:
   push:
     branches:
-      - preview
+      - main
 
 jobs:
   deploy:
@@ -18,20 +18,20 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST_PREVIEW }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.EC2_HOST_PRODUCTION }} >> ~/.ssh/known_hosts
 
       - name: 🚀 Deploy and Restart FastAPI
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PREVIEW }} << 'EOF'
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST_PRODUCTION }} << 'EOF'
             set -e  # Exit immediately if a command fails
 
             echo "🔄 Switching to project directory..."
-            cd smart-oh-preview
+            cd smart-oh-production
 
             echo "⬇️ Pulling latest changes..."
             git fetch --all
-            git checkout preview
-            git reset --hard origin/preview
+            git checkout main
+            git reset --hard origin/main
 
             echo "📂 Navigating to backend directory..."
             cd smart-oh-ws
