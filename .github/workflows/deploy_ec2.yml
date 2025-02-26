@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - preview
 
 jobs:
   deploy:
@@ -27,10 +26,10 @@ jobs:
             set -e  # Stop execution if any command fails
 
             echo "🚀 Changing to project directory..."
-            cd smart-oh-ws-server 
+            cd smart-oh/smart-oh-ws
 
             echo "🔄 Pulling latest code from GitHub..."
-            git pull origin main  # Change if needed
+            git pull origin main 
             
             echo "📦 Installing dependencies..."
             uv sync
