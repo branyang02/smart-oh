@@ -1,0 +1,46 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - preview
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔐 Setup SSH Access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 🚀 Deploy and Restart FastAPI
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # Exit immediately if a command fails
+
+            echo "🔄 Switching to project directory..."
+            cd smart-oh-preview
+
+            echo "⬇️ Pulling latest changes..."
+            git fetch --all
+            git checkout preview
+            git reset --hard origin/preview
+
+            echo "📂 Navigating to backend directory..."
+            cd smart-oh-ws
+            
+            echo "📦 Installing dependencies..."
+            uv sync
+
+            echo "🔄 Restarting FastAPI service..."
+            sudo systemctl restart smart-oh-preview.service
+
+            echo "✅ Deployment completed successfully!"
+          EOF

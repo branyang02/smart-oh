@@ -68,7 +68,7 @@ const CardList = memo(function CardList({
     onLeaveColumn
 }: {
     column: TColumn;
-    onLeaveColumn: (columnId: string) => void;
+    onLeaveColumn: (columnId: string, userId: string) => void;
 }) {
     return column.cards.map((card) => (
         <Card
@@ -91,7 +91,7 @@ export function Column({
     onRemoveColumn: (columnId: string) => void;
     onEditColumnTitle: (columnId: string, newTitle: string) => void;
     onJoinColumn: (columnId: string) => void;
-    onLeaveColumn: (columnId: string) => void;
+    onLeaveColumn: (columnId: string, userId: string) => void;
 }) {
     const { activeRole } = useClass();
     const scrollableRef = useRef<HTMLDivElement | null>(null);
