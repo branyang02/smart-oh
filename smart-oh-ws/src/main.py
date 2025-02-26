@@ -1,6 +1,8 @@
+import asyncio
 import json
 import logging
 import os
+from contextlib import asynccontextmanager
 from http.cookies import SimpleCookie
 from urllib.parse import parse_qs
 
@@ -21,7 +23,15 @@ logger = logging.getLogger("uvicorn.error")
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",")
 ENV = os.getenv("ENV", "dev")
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    manager.cleanup_task = asyncio.create_task(manager.cleanup_empty_columns())
+    yield  # Application is running
+    manager.cleanup_task.cancel()
+
+
+app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,

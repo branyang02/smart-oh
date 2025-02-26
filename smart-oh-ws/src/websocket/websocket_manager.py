@@ -17,7 +17,7 @@ class OfficeHourManager:
         ] = {}  # class_id -> list of active WebSocket connections
 
         self.lock = asyncio.Lock()
-        asyncio.create_task(self.cleanup_empty_columns())
+        self.cleanup_task = None
 
     def get_or_create_room(self, class_id: str) -> TBoard:
         if class_id not in self.rooms:

@@ -1,5 +1,5 @@
-import datetime
 import os
+from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 from psycopg2 import pool
@@ -41,7 +41,7 @@ def get_user_by_session_token(session_token: str) -> User | None:
             user_id, expires = session_row
 
             # 2) Check expiration
-            now_utc = datetime.datetime.now(datetime.timezone.utc)
+            now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
             if expires < now_utc:
                 return None
 
