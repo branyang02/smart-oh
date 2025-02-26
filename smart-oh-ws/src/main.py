@@ -35,7 +35,7 @@ manager = OfficeHourManager()
 
 @app.get("/")
 async def home_endpoint():
-    return {"message": "WebSocket server is running and ready to connect!"}
+    return {"message": "The webSocket server is running and ready to connect!"}
 
 
 async def authenticate_websocket(websocket: WebSocket, class_id: str):
