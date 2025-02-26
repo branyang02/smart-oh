@@ -82,12 +82,14 @@ const CardList = memo(function CardList({
 
 export function Column({
     column,
+    userCurrentColumnId,
     onRemoveColumn,
     onEditColumnTitle,
     onJoinColumn,
     onLeaveColumn
 }: {
     column: TColumn;
+    userCurrentColumnId?: string;
     onRemoveColumn: (columnId: string) => void;
     onEditColumnTitle: (columnId: string, newTitle: string) => void;
     onJoinColumn: (columnId: string) => void;
@@ -295,6 +297,7 @@ export function Column({
                 </div>
                 <JoinColumnButton
                     column={column}
+                    userCurrentColumnId={userCurrentColumnId}
                     handleJoinQueue={handleJoinColumn}
                 />
             </div>
@@ -304,19 +307,21 @@ export function Column({
 
 function JoinColumnButton({
     column,
+    userCurrentColumnId,
     handleJoinQueue
 }: {
     column: TColumn;
+    userCurrentColumnId?: string;
     handleJoinQueue: () => void;
 }) {
-    const { user, activeRole } = useClass();
+    const { activeRole } = useClass();
     if (
         (activeRole === "student" &&
             column.id === "queue" &&
-            user.currentColumnId == null) ||
+            userCurrentColumnId == null) ||
         (activeRole !== "student" &&
             column.id !== "queue" &&
-            user.currentColumnId == null)
+            userCurrentColumnId == null)
     ) {
         return (
             <div className="flex flex-row p-2 pt-0">
