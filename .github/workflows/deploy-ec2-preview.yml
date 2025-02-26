@@ -30,6 +30,7 @@ jobs:
 
             echo "⬇️ Pulling latest changes..."
             git fetch --all
+            git checkout preview
             git reset --hard origin/preview
 
             echo "📂 Navigating to backend directory..."
