@@ -1,7 +1,7 @@
 import { Role, User } from "@/types";
 
 export type TCard = {
-  user: User;
+  user: User & { currentColumnId?: string }
   role: Role;
 };
 
