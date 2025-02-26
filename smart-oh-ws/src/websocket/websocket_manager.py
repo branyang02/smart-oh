@@ -1,17 +1,23 @@
+import asyncio
+import logging
 from typing import Dict, List
 
 from fastapi import WebSocket
 
 from .state import TBoard
 
+logger = logging.getLogger("uvicorn.error")
+
 
 class OfficeHourManager:
     def __init__(self):
-        # class_id -> TBoard
-        self.rooms: Dict[str, TBoard] = {}
+        self.rooms: Dict[str, TBoard] = {}  # class_id -> TBoard
+        self.connections: Dict[
+            str, List[WebSocket]
+        ] = {}  # class_id -> list of active WebSocket connections
 
-        # class_id -> list of active WebSocket connections
-        self.connections: Dict[str, List[WebSocket]] = {}
+        self.lock = asyncio.Lock()
+        self.cleanup_task = None
 
     def get_or_create_room(self, class_id: str) -> TBoard:
         if class_id not in self.rooms:
@@ -44,3 +50,21 @@ class OfficeHourManager:
                     to_remove.append(connection)
             for connection in to_remove:
                 self.remove_connection(class_id, connection)
+
+    async def cleanup_empty_columns(self):
+        """Background task to remove empty columns (except 'queue') every 10 minutes."""
+        while True:
+            await asyncio.sleep(600)  # Run every 10 minutes (600 seconds)
+            logger.info("Cleaning up empty columns")
+
+            async with self.lock:
+                for class_id, board in list(self.rooms.items()):
+                    updated_columns = [
+                        col for col in board.columns if col.id == "queue" or col.cards
+                    ]
+
+                    if len(updated_columns) != len(
+                        board.columns
+                    ):  # Only update if columns were removed
+                        board.columns = updated_columns
+                        await self.broadcast(class_id, board.model_dump_json())

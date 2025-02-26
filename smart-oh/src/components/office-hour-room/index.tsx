@@ -6,7 +6,7 @@ import { TBoard } from "./data";
 import { SettingsContextProvider } from "./settings-context";
 
 const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
-    const { user, sessionToken } = useClass();
+    const { sessionToken } = useClass();
     const wsRef = useRef<WebSocket | null>(null);
     const [roomState, setRoomState] = useState<TBoard | null>(null);
 
@@ -62,14 +62,10 @@ const OfficeHourRoom = ({ currClassId }: { currClassId: string }) => {
         return <div>Loading…</div>;
     }
 
-    user.currentColumnId = roomState.allUsers.find(
-        (card) => card.user.id === user.id
-    )?.user.currentColumnId;
-
     return (
         <SettingsContextProvider>
             <Board
-                initial={roomState!}
+                initial={roomState}
                 handleRoomStateChange={handleRoomStateChange}
             />
         </SettingsContextProvider>

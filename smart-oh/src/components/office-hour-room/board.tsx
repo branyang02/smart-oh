@@ -520,6 +520,10 @@ export function Board({
         });
     }
 
+    const userCurrentColumnId = data.allUsers.find(
+        (card) => card.user.id === user.id
+    )?.user.currentColumnId;
+
     return (
         <div className="flex h-full flex-col">
             <div
@@ -534,6 +538,7 @@ export function Board({
                     <Column
                         key={column.id}
                         column={column}
+                        userCurrentColumnId={userCurrentColumnId}
                         onRemoveColumn={handleRemoveColumn}
                         onEditColumnTitle={handleEditColumnTitle}
                         onJoinColumn={handleJoinColumn}
