@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.db.db import get_role_by_user_id_class_id, get_user_by_session_token
+from src.db.db import get_role_by_user_id_class_id, get_user_by_session_token, pool
 from src.websocket.state import TBoard, TCard
 from src.websocket.websocket_manager import OfficeHourManager
 
@@ -26,9 +26,13 @@ ENV = os.getenv("ENV", "dev")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    manager.cleanup_task = asyncio.create_task(manager.cleanup_empty_columns())
-    yield  # Application is running
+    manager.cleanup_task = asyncio.create_task(
+        manager.cleanup_empty_columns()
+    )  # Start background task for cleaning up empty columns
+    await pool.open()  # Open the database connection pool
+    yield
     manager.cleanup_task.cancel()
+    await pool.close()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -83,13 +87,13 @@ async def authenticate_websocket(websocket: WebSocket, class_id: str):
         return None
 
     # Query the database for user authentication
-    user = get_user_by_session_token(session_token)
+    user = await get_user_by_session_token(session_token)
     if not user:
         logger.warning("Invalid session token")
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
 
-    role = get_role_by_user_id_class_id(user.id, class_id)
+    role = await get_role_by_user_id_class_id(user.id, class_id)
     return user, role
 
 
