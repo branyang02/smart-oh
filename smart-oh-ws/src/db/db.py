@@ -1,79 +1,77 @@
 import os
 from datetime import datetime, timezone
+from typing import Optional, Tuple
 
 from dotenv import load_dotenv
-from psycopg.rows import class_row
-from psycopg_pool import AsyncConnectionPool, ConnectionPool
+from psycopg_pool import ConnectionPool
 
 from src.websocket.state import User
 
 load_dotenv()
 connection_string = os.getenv("DATABASE_URL")
 
-pool = AsyncConnectionPool(conninfo=connection_string, open=False)
+# Global connection pool
+pool = ConnectionPool(
+    conninfo=connection_string, open=True, max_lifetime=180
+)  # recreate connections after 3 minutes
 
 
-async def _get_user_by_user_id(user_id: str) -> User:
-    async with pool.connection() as conn:
-        async with conn.cursor(row_factory=class_row(User)) as cur:
-            await cur.execute(
-                """
-                SELECT "id", "name", "email", "emailVerified", "image"
-                FROM "user"
-                WHERE "id" = %s
-                LIMIT 1
-                """,
-                (user_id,),
-            )
-            user = await cur.fetchone()
+def get_user_and_role(session_token: str, class_id: str) -> Tuple[User, Optional[str]]:
+    """
+    Fetch the user based on session_token, ensure the session isn't expired,
+    and get the user's role in the specified class (if any).
 
-            if not user:
-                raise KeyError(f"User ID {user_id} not found")
+    Returns:
+        A tuple: (user_object, role_string_or_None).
 
-            return user
+    Raises:
+        KeyError: if no matching session row is found.
+        ValueError: if the session token has expired.
+    """
+    query = """
+    SELECT
+      s."userId"       AS session_user_id,
+      s."expires"      AS session_expires,
+      u."id"           AS user_id,
+      u."name"         AS name,
+      u."email"        AS email,
+      u."emailVerified" AS emailverified,
+      u."image"        AS image,
+      uc."role"        AS role
+    FROM "session" AS s
+    JOIN "user" AS u
+      ON s."userId" = u."id"
+    LEFT JOIN "user_class" AS uc
+      ON u."id" = uc."user_id"
+      AND uc."class_id" = %s
+    WHERE s."sessionToken" = %s
+    LIMIT 1
+    """
 
+    with pool.connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (class_id, session_token))
+            row = cur.fetchone()
 
-async def get_user_by_session_token(session_token: str) -> User:
-    async with pool.connection() as conn:
-        async with conn.cursor() as cur:
-            await cur.execute(
-                """
-                SELECT "userId", "expires"
-                FROM "session"
-                WHERE "sessionToken" = %s
-                LIMIT 1
-                """,
-                (session_token,),
-            )
-            session_row = await cur.fetchone()
+            if row is None:
+                # No row => invalid session token
+                raise KeyError(f"No session found for token: {session_token}")
 
-            user_id, expires = session_row
+            # Parse results
+            _, expires, user_id, name, email, email_verified, image, role = row
 
-            if not session_row:
-                raise KeyError(f"Session token {session_token} not found")
-
+            # Check if expired
             now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
             if expires < now_utc:
-                raise ValueError(f"Session token {session_token} has expired")
+                raise ValueError("Session token has expired")
 
-            return _get_user_by_user_id(user_id)
-
-
-async def get_role_by_user_id_class_id(user_id: str, class_id: str) -> str:
-    async with pool.connection() as conn:
-        async with conn.cursor() as cur:
-            await cur.execute(
-                """
-                SELECT "role"
-                FROM "user_class"
-                WHERE "user_id" = %s AND "class_id" = %s
-                LIMIT 1
-                """,
-                (user_id, class_id),
+            # Build User object
+            user = User(
+                id=user_id,
+                name=name,
+                email=email,
+                emailVerified=email_verified,
+                image=image,
             )
-            role_row = await cur.fetchone()
 
-            if not role_row:
-                raise KeyError(f"User ID {user_id} not found in class {class_id}")
-
-            return role_row[0]
+    return user, role
