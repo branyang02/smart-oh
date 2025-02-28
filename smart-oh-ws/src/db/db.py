@@ -8,11 +8,18 @@ from psycopg_pool import ConnectionPool
 from src.websocket.state import User
 
 load_dotenv()
-connection_string = os.getenv("DATABASE_URL")
+db_url = os.getenv("DATABASE_URL")
 
 # Global connection pool
+conn_string = (
+    f"{db_url}"
+    "&keepalives=1"
+    "&keepalives_idle=30"
+    "&keepalives_interval=10"
+    "&keepalives_count=5"
+)
 pool = ConnectionPool(
-    conninfo=connection_string, open=True, max_lifetime=180
+    conninfo=conn_string, open=True, max_lifetime=180
 )  # recreate connections after 3 minutes
 
 
