@@ -2,25 +2,13 @@ import os
 from datetime import datetime, timezone
 from typing import Optional, Tuple
 
+import psycopg
 from dotenv import load_dotenv
-from psycopg_pool import ConnectionPool
 
 from src.websocket.state import User
 
 load_dotenv()
 db_url = os.getenv("DATABASE_URL")
-
-# Global connection pool
-conn_string = (
-    f"{db_url}"
-    "&keepalives=1"
-    "&keepalives_idle=30"
-    "&keepalives_interval=10"
-    "&keepalives_count=5"
-)
-pool = ConnectionPool(
-    conninfo=conn_string, open=True, max_lifetime=180
-)  # recreate connections after 3 minutes
 
 
 def get_user_and_role(session_token: str, class_id: str) -> Tuple[User, Optional[str]]:
@@ -54,8 +42,7 @@ def get_user_and_role(session_token: str, class_id: str) -> Tuple[User, Optional
     WHERE s."sessionToken" = %s
     LIMIT 1
     """
-
-    with pool.connection() as conn:
+    with psycopg.connect(conninfo=db_url) as conn:
         with conn.cursor() as cur:
             cur.execute(query, (class_id, session_token))
             row = cur.fetchone()
