@@ -118,6 +118,7 @@ export function Board({
                             };
                             const columns = Array.from(data.columns);
                             columns[homeColumnIndex] = updated;
+                            setData({ ...data, columns });
                             handleRoomStateChange({ ...data, columns });
                             return;
                         }
@@ -169,6 +170,11 @@ export function Board({
                                 : card
                         );
 
+                        setData({
+                            ...data,
+                            columns,
+                            allUsers
+                        });
                         handleRoomStateChange({
                             ...data,
                             columns,
@@ -204,6 +210,7 @@ export function Board({
                             };
                             const columns = Array.from(data.columns);
                             columns[homeColumnIndex] = updated;
+                            setData({ ...data, columns });
                             handleRoomStateChange({ ...data, columns });
                             return;
                         }
@@ -240,7 +247,11 @@ export function Board({
                                   }
                                 : card
                         );
-
+                        setData({
+                            ...data,
+                            columns,
+                            allUsers
+                        });
                         handleRoomStateChange({
                             ...data,
                             columns,
@@ -300,7 +311,11 @@ export function Board({
                               }
                             : card
                     );
-
+                    setData({
+                        ...data,
+                        columns: reordered,
+                        allUsers
+                    });
                     handleRoomStateChange({
                         ...data,
                         columns: reordered,

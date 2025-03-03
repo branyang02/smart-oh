@@ -44,4 +44,5 @@ async def authenticate_websocket(websocket: WebSocket, class_id: str):
         return None
 
     user, role = get_user_and_role(session_token, class_id)
+
     return user, role
