@@ -16,10 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Change to NextJS directory
-        working-directory: smart-oh
-        run: echo "Working inside smart-oh"
-
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
@@ -31,12 +27,16 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
+          cache-dependency-path: smart-oh/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install
+        working-directory: smart-oh
 
       - name: Set up environment variables
         run: echo "${{ secrets.TEST_ENV_VARS }}" > .env.test
+        working-directory: smart-oh
 
       - name: Run tests
         run: pnpm test
+        working-directory: smart-oh
