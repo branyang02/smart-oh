@@ -16,6 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Change to NextJS directory
+        working-directory: smart-oh
+        run: echo "Working inside smart-oh"
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
