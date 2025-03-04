@@ -1,7 +1,10 @@
 "use client";
 
 import { useClass } from "@/context/class-context";
-import { autoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
+import {
+    autoScrollForElements,
+    autoScrollWindowForElements
+} from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { unsafeOverflowAutoScrollForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/unsafe-overflow/element";
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge";
@@ -42,6 +45,10 @@ export function Board({
 
     const scrollableRef = useRef<HTMLDivElement | null>(null);
     const { settings } = useContext(SettingsContext);
+
+    useEffect(() => {
+        return autoScrollWindowForElements();
+    });
 
     useEffect(() => {
         const element = scrollableRef.current;
@@ -447,9 +454,10 @@ export function Board({
 
     function handleAddColumn() {
         const newId = String(Date.now());
+        const newTitle = newId.slice(-6);
         const newColumn = {
             id: newId,
-            title: newId,
+            title: `Session ${newTitle}`,
             cards: []
         };
         const newColumns = [...data.columns, newColumn];
@@ -535,7 +543,7 @@ export function Board({
                 ? {
                       ...column,
                       cards: column.cards.filter(
-                          (card) => card.user.id !== user.id
+                          (card) => card.user.id !== userId
                       )
                   }
                 : column
