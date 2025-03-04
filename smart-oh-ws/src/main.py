@@ -19,7 +19,7 @@ logger = logging.getLogger("uvicorn.error")
 
 # Load configuration from environment variables
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",")
-ENV = os.getenv("ENV", "dev")
+ENV = os.getenv("ENV", "development")
 
 
 @asynccontextmanager
@@ -41,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-manager = OfficeHourManager()
+manager = OfficeHourManager(dev=ENV == "development")
 
 
 @app.get("/")

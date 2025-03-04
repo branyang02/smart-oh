@@ -4,13 +4,14 @@ from typing import Dict, List
 
 from fastapi import WebSocket
 
+from .dummy_data import generate_dummy_data
 from .state import TBoard
 
 logger = logging.getLogger("uvicorn.error")
 
 
 class OfficeHourManager:
-    def __init__(self):
+    def __init__(self, dev: bool = False):
         self.rooms: Dict[str, TBoard] = {}  # class_id -> TBoard
         self.connections: Dict[
             str, List[WebSocket]
@@ -18,6 +19,10 @@ class OfficeHourManager:
 
         self.lock = asyncio.Lock()
         self.cleanup_task = None
+
+        if dev:
+            class_id, board = generate_dummy_data()
+            self.rooms[class_id] = board
 
     def get_or_create_room(self, class_id: str) -> TBoard:
         if class_id not in self.rooms:
