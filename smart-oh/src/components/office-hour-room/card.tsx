@@ -1,6 +1,12 @@
 "use client";
 
 import { isSafari } from "@/components/office-hour-room/is-safari";
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuTrigger
+} from "@/components/ui/context-menu";
 import { useClass } from "@/context/class-context";
 import {
     type Edge,
@@ -101,86 +107,102 @@ export function CardDisplay({
     onLeaveColumn?: (columnId: string, userId: string) => void;
 }) {
     const { user } = useClass();
-    const handleLeaveColumn = () => {
+
+    const handleLeaveColumn = (userId: string) => {
         if (onLeaveColumn && columnId) {
-            onLeaveColumn(columnId, user.id);
+            onLeaveColumn(columnId, userId);
         }
     };
 
     return (
-        <div
-            ref={outerRef}
-            className={`flex flex-shrink-0 flex-col gap-2 px-3 py-1 ${outerStyles[state.type]}`}
-        >
-            {/* Put a shadow before the item if closer to the top edge */}
-            {state.type === "is-over" && state.closestEdge === "top" ? (
-                <CardShadow dragging={state.dragging} />
-            ) : null}
+        <ContextMenu>
+            <ContextMenuTrigger disabled={!draggable}>
+                <div
+                    ref={outerRef}
+                    className={`flex flex-shrink-0 flex-col gap-2 px-3 py-1 ${outerStyles[state.type]}`}
+                >
+                    {/* Put a shadow before the item if closer to the top edge */}
+                    {state.type === "is-over" && state.closestEdge === "top" ? (
+                        <CardShadow dragging={state.dragging} />
+                    ) : null}
 
-            <div
-                className={`rounded p-2 ${card.role === "TA" ? "border-green-300" : card.user.id === user.id ? "border-blue-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
-                ref={innerRef}
-                style={
-                    state.type === "preview"
-                        ? {
-                              width: state.dragging.width,
-                              height: state.dragging.height,
-                              transform: !isSafari()
-                                  ? "rotate(4deg)"
-                                  : undefined
-                          }
-                        : undefined
-                }
-            >
-                <div className="flex items-center gap-2">
-                    {draggable && (
-                        <Button
-                            variant={"ghost"}
-                            className="p-1 text-secondary-foreground/50 h-auto cursor-grab"
-                        >
-                            <span className="sr-only">Move user</span>
-                            {user.id === card.user.id ? (
-                                <UserIcon />
-                            ) : (
-                                <GripVertical />
-                            )}
-                        </Button>
-                    )}
-                    {card.role === "TA" && card.user.id !== user.id && (
-                        <p className="p-1 text-secondary-foreground/50 h-auto">
-                            TA
-                        </p>
-                    )}
-                    <Avatar user={card.user} />
-                    <div>{card.user.name}</div>
-                    {card.user.id === user.id && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                    <div
+                        className={`rounded p-2 ${card.role === "TA" ? "border-green-300" : card.user.id === user.id ? "border-blue-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
+                        ref={innerRef}
+                        style={
+                            state.type === "preview"
+                                ? {
+                                      width: state.dragging.width,
+                                      height: state.dragging.height,
+                                      transform: !isSafari()
+                                          ? "rotate(4deg)"
+                                          : undefined
+                                  }
+                                : undefined
+                        }
+                    >
+                        <div className="flex items-center gap-2">
+                            {draggable && (
                                 <Button
-                                    variant="ghost"
-                                    className="rounded p-1 ml-auto"
-                                    aria-label="More actions"
+                                    variant={"ghost"}
+                                    className="p-1 text-secondary-foreground/50 h-auto cursor-grab"
                                 >
-                                    <Ellipsis />
+                                    <span className="sr-only">Move user</span>
+                                    {user.id === card.user.id ? (
+                                        <UserIcon />
+                                    ) : (
+                                        <GripVertical />
+                                    )}
                                 </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem
-                                    onClick={handleLeaveColumn}
-                                    className="hover:cursor-pointer"
-                                >
-                                    {`Leave ${columnId === "queue" ? "queue" : "session"}`}
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
+                            )}
+                            {card.role === "TA" && card.user.id !== user.id && (
+                                <p className="p-1 text-secondary-foreground/50 h-auto">
+                                    TA
+                                </p>
+                            )}
+                            <Avatar user={card.user} />
+                            <div>{card.user.name}</div>
+                            {card.user.id === user.id && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            className="rounded p-1 ml-auto"
+                                            aria-label="More actions"
+                                        >
+                                            <Ellipsis />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem
+                                            onClick={() =>
+                                                handleLeaveColumn(user.id)
+                                            }
+                                            className="hover:cursor-pointer"
+                                        >
+                                            {`Leave ${columnId === "queue" ? "queue" : "session"}`}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
+                    </div>
+                    {/* Put a shadow after the item if closer to the bottom edge */}
+                    {state.type === "is-over" &&
+                    state.closestEdge === "bottom" ? (
+                        <CardShadow dragging={state.dragging} />
+                    ) : null}
                 </div>
-            </div>
-            {/* Put a shadow after the item if closer to the bottom edge */}
-            {state.type === "is-over" && state.closestEdge === "bottom" ? (
-                <CardShadow dragging={state.dragging} />
-            ) : null}
-        </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+                <ContextMenuItem
+                    onClick={() => handleLeaveColumn(card.user.id)}
+                    className="hover:cursor-pointer"
+                >
+                    {`Remove from ${columnId === "queue" ? "queue" : "session"}`}
+                </ContextMenuItem>
+            </ContextMenuContent>
+        </ContextMenu>
     );
 }
 

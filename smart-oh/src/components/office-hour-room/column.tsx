@@ -32,6 +32,7 @@ import {
 import { blockBoardPanningAttr } from "./data-attributes";
 import { EditableTitle } from "./editable-title";
 import { isShallowEqual } from "./is-shallow-equal";
+import QueueInfo from "./queue-info";
 import { SettingsContext } from "./settings-context";
 
 type TColumnState =
@@ -288,7 +289,12 @@ export function Column({
                     )}
                 </div>
                 <div className="flex flex-col px-3 pb-3">
-                    {column.id !== "queue" && (
+                    {column.id === "queue" ? (
+                        <QueueInfo
+                            column={column}
+                            userCurrentColumnId={userCurrentColumnId}
+                        />
+                    ) : (
                         <EditableDescription
                             description={column?.description}
                             onDescriptionChange={(newDescription) =>
