@@ -17,6 +17,7 @@ import { memo, useContext, useEffect, useRef, useState } from "react";
 import invariant from "tiny-invariant";
 
 import { Button } from "../ui/button";
+import { EditableDescription } from "./EditableDescription";
 import { Card, CardShadow } from "./card";
 import {
     TCardData,
@@ -85,6 +86,7 @@ export function Column({
     userCurrentColumnId,
     onRemoveColumn,
     onEditColumnTitle,
+    onEditColumnDescription,
     onJoinColumn,
     onLeaveColumn
 }: {
@@ -92,6 +94,7 @@ export function Column({
     userCurrentColumnId?: string;
     onRemoveColumn: (columnId: string) => void;
     onEditColumnTitle: (columnId: string, newTitle: string) => void;
+    onEditColumnDescription: (columnId: string, newDescription: string) => void;
     onJoinColumn: (columnId: string) => void;
     onLeaveColumn: (columnId: string, userId: string) => void;
 }) {
@@ -250,7 +253,7 @@ export function Column({
                 {...{ [blockBoardPanningAttr]: true }}
             >
                 <div
-                    className="flex flex-row items-center justify-between p-3"
+                    className="flex flex-row items-center justify-between p-3 pb-0"
                     ref={headerRef}
                 >
                     <EditableTitle
@@ -284,6 +287,21 @@ export function Column({
                         </DropdownMenu>
                     )}
                 </div>
+                <div className="flex flex-col px-3 pb-3">
+                    {column.id !== "queue" && (
+                        <EditableDescription
+                            description={column?.description}
+                            onDescriptionChange={(newDescription) =>
+                                onEditColumnDescription(
+                                    column.id,
+                                    newDescription
+                                )
+                            }
+                            isEditable={activeRole !== "student"}
+                        />
+                    )}
+                </div>
+
                 <div
                     className="flex flex-col pb-2 overflow-y-auto [overflow-anchor:none] [scrollbar-color:theme(colors.slate.600)_theme(colors.slate.700)] [scrollbar-width:thin] "
                     ref={scrollableRef}

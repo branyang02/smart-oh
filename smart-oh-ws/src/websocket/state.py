@@ -20,6 +20,7 @@ class TCard(BaseModel):
 class TColumn(BaseModel):
     id: str
     title: str
+    description: Optional[str] = None
     cards: List[TCard]
 
 

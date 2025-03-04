@@ -8,6 +8,7 @@ export type TCard = {
 export type TColumn = {
   id: string;
   title: string;
+  description?: string;
   cards: TCard[];
 };
 

@@ -478,6 +478,19 @@ export function Board({
         handleRoomStateChange({ ...data, columns: newColumns });
     }
 
+    function handleEditColumnDescription(
+        columnId: string,
+        newDescription: string
+    ) {
+        const newColumns = data.columns.map((column) =>
+            column.id === columnId
+                ? { ...column, description: newDescription }
+                : column
+        );
+
+        handleRoomStateChange({ ...data, columns: newColumns });
+    }
+
     function handleJoinColumn(columnId: string) {
         const newAllUsers = data.allUsers.map((card) =>
             card.user.id === user.id
@@ -556,6 +569,7 @@ export function Board({
                         userCurrentColumnId={userCurrentColumnId}
                         onRemoveColumn={handleRemoveColumn}
                         onEditColumnTitle={handleEditColumnTitle}
+                        onEditColumnDescription={handleEditColumnDescription}
                         onJoinColumn={handleJoinColumn}
                         onLeaveColumn={handleLeaveColumn}
                     />
