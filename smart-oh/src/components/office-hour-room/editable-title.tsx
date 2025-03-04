@@ -1,5 +1,5 @@
 import { Pencil } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Input } from "../ui/input";
 
@@ -17,6 +17,10 @@ export function EditableTitle({
     const [isEditing, setIsEditing] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        setNewTitle(title);
+    }, [title]);
 
     function handleDoubleClick() {
         if (!isEditable) return;
@@ -55,7 +59,7 @@ export function EditableTitle({
                 />
             ) : (
                 <div className="flex items-center gap-1">
-                    {title}
+                    {newTitle}
                     {isEditable && (
                         <Pencil
                             className="w-4 h-4 opacity-0 group-hover:opacity-50 transition-opacity"
