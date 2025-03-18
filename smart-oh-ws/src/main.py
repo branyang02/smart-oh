@@ -41,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-manager = OfficeHourManager(dev=ENV == "development")
+manager = OfficeHourManager(dev=ENV)
 
 
 @app.get("/")
