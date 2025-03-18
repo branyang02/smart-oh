@@ -11,7 +11,7 @@ logger = logging.getLogger("uvicorn.error")
 
 
 class OfficeHourManager:
-    def __init__(self, dev: bool = False):
+    def __init__(self, dev: str = None):
         self.rooms: Dict[str, TBoard] = {}  # class_id -> TBoard
         self.connections: Dict[
             str, List[WebSocket]
@@ -20,7 +20,7 @@ class OfficeHourManager:
         self.lock = asyncio.Lock()
         self.cleanup_task = None
 
-        if dev:
+        if dev == "development":
             class_id, board = generate_dummy_data()
             self.rooms[class_id] = board
 

@@ -127,7 +127,7 @@ export function CardDisplay({
                     ) : null}
 
                     <div
-                        className={`rounded p-2 ${card.role === "TA" ? "border-green-300" : card.user.id === user.id ? "border-blue-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
+                        className={`rounded p-2 ${card.user.id === user.id ? "border-blue-300" : card.role !== "student" ? "border-green-300" : ""} ${draggable ? "cursor-grab" : ""} ${innerStyles[state.type]}`}
                         ref={innerRef}
                         style={
                             state.type === "preview"
@@ -155,11 +155,13 @@ export function CardDisplay({
                                     )}
                                 </Button>
                             )}
-                            {card.role === "TA" && card.user.id !== user.id && (
-                                <p className="p-1 text-secondary-foreground/50 h-auto">
-                                    TA
-                                </p>
-                            )}
+                            {(card.role === "TA" ||
+                                card.role === "instructor") &&
+                                card.user.id !== user.id && (
+                                    <p className="p-1 text-secondary-foreground/50 h-auto">
+                                        {card.role === "TA" ? "TA" : "INST"}
+                                    </p>
+                                )}
                             <Avatar user={card.user} />
                             <div>{card.user.name}</div>
                             {card.user.id === user.id && (
@@ -222,7 +224,7 @@ export function Card({
     const [state, setState] = useState<TCardState>(idle);
 
     const isDraggable =
-        activeRole === "TA" &&
+        activeRole !== "student" &&
         (user.id === card.user.id || card.role === "student");
 
     useEffect(() => {

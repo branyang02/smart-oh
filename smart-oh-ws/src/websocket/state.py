@@ -14,7 +14,7 @@ class User(BaseModel):
 
 class TCard(BaseModel):
     user: User
-    role: Literal["student", "TA"]
+    role: Literal["student", "TA", "instructor"]
 
 
 class TColumn(BaseModel):

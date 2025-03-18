@@ -1,19 +1,12 @@
-import {
-    AvatarFallback,
-    AvatarImage,
-    Avatar as ShadAvatar
-} from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import { User } from "@/types";
+import Image from "next/image";
 
 function stringToColor(letter: string) {
-    // Ensure the input is a single English letter (A-Z, case-insensitive)
     const normalizedLetter = letter.toUpperCase().charAt(0);
-    if (!/[A-Z]/.test(normalizedLetter)) {
-        throw new Error("Input must be a single English letter (A-Z).");
-    }
+    if (!/[A-Z]/.test(normalizedLetter)) return "#CCC"; // Default color
 
-    // Predefined set of distinct and visually appealing colors
-    const colorMap: { [key: string]: string } = {
+    const colorMap: Record<string, string> = {
         A: "#FF6B6B",
         B: "#4ECDC4",
         C: "#FFEEAD",
@@ -42,14 +35,15 @@ function stringToColor(letter: string) {
         Z: "#FF8B94"
     };
 
-    return colorMap[normalizedLetter];
+    return colorMap[normalizedLetter] || "#CCC";
 }
 
-function stringAvatar(name: string) {
-    return {
-        color: stringToColor(name[0]),
-        initials: `${name[0]}`
-    };
+function getInitials(name: string) {
+    return name
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join("");
 }
 
 export default function Avatar({
@@ -59,30 +53,37 @@ export default function Avatar({
     user: User;
     status?: "active" | "inactive";
 }) {
-    if (user.image) {
-        return (
-            <ShadAvatar status={status} className="border-2 border-background">
-                <AvatarImage src={user.image} alt={user.name} />
-                <AvatarFallback
-                    style={{
-                        backgroundColor: `${stringAvatar(user.name).color}`
-                    }}
-                >
-                    {stringAvatar(user.name).initials}
-                </AvatarFallback>
-            </ShadAvatar>
-        );
-    }
+    const hasImage = Boolean(user.image);
+    const backgroundColor = stringToColor(user.name[0]);
+    const initials = getInitials(user.name);
 
     return (
-        <ShadAvatar status={status} className="border-2 border-background">
-            <AvatarFallback
-                style={{
-                    backgroundColor: `${stringAvatar(user.name).color}`
-                }}
-            >
-                {stringAvatar(user.name).initials}
-            </AvatarFallback>
-        </ShadAvatar>
+        <div className="relative">
+            {hasImage ? (
+                <Image
+                    src={user.image as string}
+                    alt={user.name}
+                    width={96}
+                    height={96}
+                    draggable={false}
+                    className="border-2 border-transparent relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
+                />
+            ) : (
+                <div
+                    className="border-2 border-transparent flex h-10 w-10 shrink-0 overflow-hidden rounded-full items-center justify-center text-white font-medium uppercase"
+                    style={{ backgroundColor }}
+                >
+                    {initials}
+                </div>
+            )}
+            {status && (
+                <span
+                    className={cn(
+                        "absolute bottom-1 right-1 h-2 w-2 rounded-full border border-background",
+                        status === "active" ? "bg-green-500" : "bg-yellow-500"
+                    )}
+                />
+            )}
+        </div>
     );
 }
