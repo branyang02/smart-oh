@@ -7,8 +7,6 @@ import { useClass } from "@/context/class-context";
 export default function ClassPage() {
     const { activeClass, activeRole } = useClass();
     if (!activeClass || !activeRole) return null;
-    if (activeRole === "instructor")
-        throw new Error("Instructor view not implemented");
 
     return (
         <>
