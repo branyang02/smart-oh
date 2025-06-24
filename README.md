@@ -7,6 +7,8 @@ Smart-OH is a **modern office hours queue system** designed for students, teachi
 - **`./smart-oh`** → Next.js frontend and database logic.
 - **`./smart-oh-ws`** → FastAPI WebSocket server for real-time updates.
 
+https://github.com/user-attachments/assets/a9ea0276-0cea-4054-8572-f872a5c9f266
+
 ## Prerequisites
 
 Before setting up the project, install:
